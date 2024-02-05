@@ -15,7 +15,7 @@ Refer to the [**CI & CD section**](./docs/CI-CD.md#running-in-local-development-
 The NextJS starter app can be installed via the following command
 
 ``` bash
-npx create-next-app --example "https://github.com/sitefinity/nextjs-starter"
+npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/nextjs-samples/tree/main/starter-template"
 ```
 
 ## File structure
