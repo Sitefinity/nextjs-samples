@@ -62,6 +62,7 @@ const customWidgetRegistry: WidgetRegistry = {
         'HelloWorld': {
             componentType: HelloWorld, // registration of the widget
             entity: HelloWorldEntity, // registration of the designer
+            editorMetadata: {...} // metadata to be displayed in the WYSIWYG edotir - title, available operation, empty content visuals etc.
             ssr: true // whether this is a server rendered or client rendered component
         }
     }

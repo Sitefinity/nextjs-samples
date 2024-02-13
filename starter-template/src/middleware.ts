@@ -34,7 +34,6 @@ export async function middleware(request: NextRequest) {
 
     if (request.nextUrl.pathname.indexOf('.axd') !== -1 || paths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) || /\/sitefinity(?!\/template)/i.test(request.nextUrl.pathname)) {
         const headers = new Headers(request.headers);
-        headers.append('X-Requested-With', 'react');
         headers.append('X-SFRENDERER-PROXY', 'true');
 
         if (process.env.SF_CLOUD_KEY && process.env.PORT) {
@@ -49,14 +48,25 @@ export async function middleware(request: NextRequest) {
 
         const proxyURL = new URL(process.env.PROXY_URL!);
         let url = new URL(request.url);
+
         url.hostname = proxyURL.hostname;
         url.protocol = proxyURL.protocol;
         url.port = proxyURL.port;
 
-        if (request.url.indexOf('Default.Hierarchy') !== -1) {
-            const parsedParams = new URLSearchParams(url.search);
-            parsedParams.delete('$select');
-            url.search = parsedParams.toString();
+        if (request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.indexOf('/api/default') !== -1)) {
+            // for some reason NextResponse.rewrite double encodes the URL, so this is necessary to remove the encoding
+            url.search = decodeURIComponent(url.search);
+            let response = await fetch(url, {
+                headers: headers,
+                body: null,
+                method: request.method,
+                credentials: 'include',
+                redirect: 'follow'
+            }).catch((error) => {
+                console.error('There was a problem with the Fetch operation:', error);
+            });
+
+            return response;
         }
 
         return NextResponse.rewrite(url, {
