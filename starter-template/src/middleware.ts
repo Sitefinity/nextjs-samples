@@ -55,6 +55,7 @@ export async function middleware(request: NextRequest) {
 
         if (request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.indexOf('/api/default') !== -1)) {
             // for some reason NextResponse.rewrite double encodes the URL, so this is necessary to remove the encoding
+            headers.set('HOST', url.hostname);
             url.search = decodeURIComponent(url.search);
             let response = await fetch(url, {
                 headers: headers,
