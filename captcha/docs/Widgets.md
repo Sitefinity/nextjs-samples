@@ -45,10 +45,12 @@ export class HelloWorldEntity {
 
 ```
 
+For more information about the full capabilities and more advanced configurations, please refer to the [@progress/sitefinity-widget-designers-sdk](https://www.npmjs.com/package/@progress/sitefinity-widget-designers-sdk) package documentation.
+
+
 ### Registration with the framework
 
 Once we have the above two files ready, we need to register the component implementation and the designer metadata with the NextJs Renderer.
-For more advanced configurations visit the [designers project page](@progress/sitefinity-widget-designers-sdk)
 
 For the component we need to go to the file [render-widget-service](./src/app/widget-registry.ts) and to add a new entry to the map like so:
 

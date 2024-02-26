@@ -26,7 +26,7 @@ The starter template repository contains a set of files that are built specifica
 
 * public/assets -> Contains resources such as bootstrap and the default thumbnail for page templates selection in the administration.
 
-* package.json -> Standard package.json file with dependencies for **@progress/sitefinity-widget-designers-sdk** and **@progress/sitefinity-nextjs-sdk**
+* package.json -> Standard package.json file with dependencies for [**@progress/sitefinity-widget-designers-sdk**](https://www.npmjs.com/package/@progress/sitefinity-widget-designers-sdk) and [**@progress/sitefinity-nextjs-sdk**](https://www.npmjs.com/package/@progress/sitefinity-nextjs-sdk)
 
 * src/middleware.ts -> Standard next.js middleware file. The default implementation contains the [proxy logic](./docs/CI-CD.md#proxy-logic). The file can be further modified according to the needs of the application.
 

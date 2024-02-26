@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
+import { RootUrlService } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
 
 export async function middleware(request: NextRequest) {
+    // handle available templates api call
     const regex = /\/sf\/system\/(?<type>.*?)\/Default\.GetPageTemplates\(selectedPages=(?<selectedPages>.*?)\)/;
     const match = request.nextUrl.pathname.match(regex);
     if (match && match.groups) {
@@ -14,11 +16,15 @@ export async function middleware(request: NextRequest) {
         }
     }
 
+    // handle form render
     if (/\/sitefinity\/forms/i.test(request.nextUrl.pathname) && request.nextUrl.search.indexOf('render=true') !== -1) {
         return NextResponse.next();
     }
 
-    if (request.nextUrl.pathname === '/assets' || request.nextUrl.pathname === '/favicon.ico') {
+    // handle known paths
+    if (request.nextUrl.pathname.startsWith('/assets') ||
+        request.nextUrl.pathname.startsWith('/_next') ||
+        request.nextUrl.pathname === '/favicon.ico') {
         return NextResponse.next();
     }
 
@@ -30,33 +36,38 @@ export async function middleware(request: NextRequest) {
         throw 'No access key found';
     }
 
-    const paths = ['/adminapp', '/sf/system', '/api/default', '/ws', '/restapi', '/contextual-help', '/res', '/admin-bridge', '/sfres', '/images', '/documents', '/videos', '/forms/submit'];
+    //handle known service paths
+    const paths = [
+        '/Sitefinity/Services',
+        '/Sitefinity/adminapp',
+        '/adminapp', 
+        '/sf/system',
+        '/api/default',
+        '/ws', 
+        '/restapi',
+        '/contextual-help',
+        '/res',
+        '/admin-bridge',
+        '/sfres',
+        '/images',
+        '/documents',
+        '/videos',
+        '/forms/submit',
+        '/ExtRes'
+    ];
 
-    if (request.nextUrl.pathname.indexOf('.axd') !== -1 || paths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) || /\/sitefinity(?!\/template)/i.test(request.nextUrl.pathname)) {
-        const headers = new Headers(request.headers);
-        headers.append('X-SFRENDERER-PROXY', 'true');
-
-        if (process.env.SF_CLOUD_KEY && process.env.PORT) {
-            // for Sitefinity cloud
-            headers.append('X-SF-BYPASS-HOST', `localhost:${process.env.PORT}`);
-            headers.append('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.SF_CLOUD_KEY);
-        } else if (process.env.PORT) {
-            // when using a custom port
-            const originalHost = process.env.PROXY_ORIGINAL_HOST || 'localhost';
-            headers.append('X-ORIGINAL-HOST', `${originalHost}:${process.env.PORT}`);
-        }
-
-        const proxyURL = new URL(process.env.PROXY_URL!);
-        let url = new URL(request.url);
-
-        url.hostname = proxyURL.hostname;
-        url.protocol = proxyURL.protocol;
-        url.port = proxyURL.port;
+    if (request.nextUrl.pathname.indexOf('.axd') !== -1 ||
+        paths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
+        /\/sitefinity(?!\/template)/i.test(request.nextUrl.pathname) ||
+        /Action\/(Edit|Preview)/i.test(request.nextUrl.pathname)
+        ) {
+        
+        const {url, headers} = generateProxyRequest(request);
 
         if (request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.indexOf('/api/default') !== -1)) {
             // for some reason NextResponse.rewrite double encodes the URL, so this is necessary to remove the encoding
-            headers.set('HOST', url.hostname);
             url.search = decodeURIComponent(url.search);
+            headers.set('HOST', url.hostname);
             let response = await fetch(url, {
                 headers: headers,
                 body: null,
@@ -77,5 +88,46 @@ export async function middleware(request: NextRequest) {
         });
     }
 
-    return NextResponse.next();
+    // proxy everything else and if returns X-SFRENDERER-PROXY, handle it, otherwise - it's a valid responce
+    const {url, headers} = generateProxyRequest(request);
+    return fetch(url, {headers}).then(x => {
+        if (x.headers.has('X-SFRENDERER-PROXY')) {
+            return NextResponse.next();
+        } else {
+            if (x.status === 404) {
+                // handles 404 pages in the Next.js app
+                // if you want to handle them with Sitefinity, remove this part
+                return NextResponse.next({status: 404});
+            }
+
+            return x;
+        }
+    });
+}
+
+function generateProxyRequest(request: NextRequest) {
+    const headers = new Headers(request.headers);
+    headers.append('X-SFRENDERER-PROXY', 'true');
+    if (!headers.has('X-SF-WEBSERVICEPATH')) {
+        headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
+    }
+
+    if (process.env.SF_CLOUD_KEY && process.env.PORT) {
+        // for Sitefinity cloud
+        headers.append('X-SF-BYPASS-HOST', `localhost:${process.env.PORT}`);
+        headers.append('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.SF_CLOUD_KEY);
+    } else if (process.env.PORT) {
+        // when using a custom port
+        const originalHost = process.env.PROXY_ORIGINAL_HOST || 'localhost';
+        headers.append('X-ORIGINAL-HOST', `${originalHost}:${process.env.PORT}`);
+    }
+
+    const proxyURL = new URL(process.env.PROXY_URL!);
+    let url = new URL(request.url);
+
+    url.hostname = proxyURL.hostname;
+    url.protocol = proxyURL.protocol;
+    url.port = proxyURL.port;
+
+    return {url, headers};
 }
