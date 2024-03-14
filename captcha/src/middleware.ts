@@ -40,10 +40,10 @@ export async function middleware(request: NextRequest) {
     const paths = [
         '/Sitefinity/Services',
         '/Sitefinity/adminapp',
-        '/adminapp', 
+        '/adminapp',
         '/sf/system',
         '/api/default',
-        '/ws', 
+        '/ws',
         '/restapi',
         '/contextual-help',
         '/res',
@@ -61,13 +61,12 @@ export async function middleware(request: NextRequest) {
         /\/sitefinity(?!\/template)/i.test(request.nextUrl.pathname) ||
         /Action\/(Edit|Preview)/i.test(request.nextUrl.pathname)
         ) {
-        
+
         const {url, headers} = generateProxyRequest(request);
 
         if (request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.indexOf('/api/default') !== -1)) {
             // for some reason NextResponse.rewrite double encodes the URL, so this is necessary to remove the encoding
             url.search = decodeURIComponent(url.search);
-            headers.set('HOST', url.hostname);
             let response = await fetch(url, {
                 headers: headers,
                 body: null,
@@ -124,6 +123,7 @@ function generateProxyRequest(request: NextRequest) {
 
     const proxyURL = new URL(process.env.PROXY_URL!);
     let url = new URL(request.url);
+    headers.set('HOST', proxyURL.hostname);
 
     url.hostname = proxyURL.hostname;
     url.protocol = proxyURL.protocol;
