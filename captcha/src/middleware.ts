@@ -87,7 +87,7 @@ export async function middleware(request: NextRequest) {
         });
     }
 
-    // proxy everything else and if returns X-SFRENDERER-PROXY, handle it, otherwise - it's a valid responce
+    // proxy everything else and if returns X-SFRENDERER-PROXY, handle it, otherwise - it's a valid response
     const {url, headers} = generateProxyRequest(request);
     return fetch(url, {headers}).then(x => {
         if (x.headers.has('X-SFRENDERER-PROXY')) {

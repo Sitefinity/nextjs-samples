@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@progress/sitefinity-widget-designers-sdk": "0.1.4",
-    "@progress/sitefinity-nextjs-sdk": "0.1.9-beta.0",
+    "@progress/sitefinity-nextjs-sdk": "0.1.10-beta.0",
     "bootstrap": "5.3.2",
     "next": "14.0.3",
     "react": "18.2.0",

@@ -15,9 +15,9 @@ const customWidgetRegistry: WidgetRegistry = {
     }
 };
 
-
-Object.keys(defaultWidgetRegistry.widgets).forEach((key) => {
-    customWidgetRegistry.widgets[key] = defaultWidgetRegistry.widgets[key];
-});
+customWidgetRegistry.widgets = {
+    ...defaultWidgetRegistry.widgets,
+    ...customWidgetRegistry.widgets
+};
 
 export const widgetRegistry: WidgetRegistry = initRegistry(customWidgetRegistry);
