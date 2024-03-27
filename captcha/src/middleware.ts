@@ -111,14 +111,21 @@ function generateProxyRequest(request: NextRequest) {
         headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
     }
 
-    if (process.env.SF_CLOUD_KEY && process.env.PORT) {
+    let resolvedHost =  process.env.PROXY_ORIGINAL_HOST || request.nextUrl.host;
+    if (!resolvedHost) {
+        if (process.env.PORT) {
+            resolvedHost = `localhost:${process.env.PORT}`;
+        } else {
+            resolvedHost = 'localhost';
+        }
+    }
+
+    if (process.env.SF_CLOUD_KEY) {
         // for Sitefinity cloud
-        headers.append('X-SF-BYPASS-HOST', `localhost:${process.env.PORT}`);
-        headers.append('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.SF_CLOUD_KEY);
-    } else if (process.env.PORT) {
-        // when using a custom port
-        const originalHost = process.env.PROXY_ORIGINAL_HOST || 'localhost';
-        headers.append('X-ORIGINAL-HOST', `${originalHost}:${process.env.PORT}`);
+        headers.set('X-SF-BYPASS-HOST', resolvedHost);
+        headers.set('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.SF_CLOUD_KEY);
+    } else {
+        headers.set('X-ORIGINAL-HOST', resolvedHost);
     }
 
     const proxyURL = new URL(process.env.PROXY_URL!);
@@ -129,5 +136,5 @@ function generateProxyRequest(request: NextRequest) {
     url.protocol = proxyURL.protocol;
     url.port = proxyURL.port;
 
-    return {url, headers};
+    return { url, headers };
 }

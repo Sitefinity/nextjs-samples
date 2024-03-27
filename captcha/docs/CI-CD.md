@@ -7,28 +7,6 @@ When developing you will need access to the WYSIWYG editor and the backend at th
 
 Running in dev mode **does not require installing additional software and works on any nodejs supported OS**. Follow these steps:
 
-1. Run in the console
-``` bash
-    npm i
-```
-2. Go to [.env.development file](/.env.development) and set the ['PROXY_URL'](#environment-variables-legend) variable to point to the URL of the CMS.
-
-3. Setup the CMS to allow proxying requests from localhost
-
-   If CMS is hosted on azure -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-.net-core-renderer-on-azure-app-services)
-
-   If CMS is hosted on local IIS (Step 5 to 14) -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-the-.net-core-renderer-on-the-same-iis)
-
-   If CMS is hosted in Sitefinity cloud, make sure to enter your validation key in the 'SF_CLOUD_KEY' environment variable as shown in env.development
-
-   Configure the CMS web service -> Follow the instructions [here](https://www.progress.com/documentation/sitefinity-cms/setup-the-asp.net-core-renderer#configure-sitefinity-cms)
-
-4. Generate an access key and set the ['SF_ACCESS_KEY'](#environment-variables-legend) environment variable.
-4. Run in the console
-``` bash
-    npm run dev
-```
-
 ## Running under https
 The sample runs under SSL by default and installs a default ssl certificate. If you wish to remove it, change the command in [package.json](../package.json)
 
