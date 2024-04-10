@@ -16,7 +16,7 @@ npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/n
 ``` bash
 npm i
 ```
-3. Go to [.env.development file](/.env.development) and set the **'PROXY_URL'** variable to point to the URL of the CMS.
+3. Go to [.env.development file](/.env.development) and set the **'SF_CMS_URL'** variable to point to the URL of the CMS.
 
 4. Create an access key for the user and set it to the **'SF_ACCESS_KEY'** environment variable. For more information, see [Creating Access Keys](https://www.progress.com/documentation/sitefinity-cms/generate-access-key)
 
@@ -86,11 +86,55 @@ The starter template repository contains a set of files that are built specifica
 
 ## Home page
 
-The default behavior for the home page is to redirect the root '/' path to '/home'. This can be configured in [next.config.js file](./next.config.js)
+The default behavior for the home page is to redirect the root '/' path to '/home'. This can be configured in **next.config.js file**
+
+## Custom api routes
+When using the RestClient in custom API routes be sure to initialize it first
+
+E.g for route/api/navigation
+
+``` React
+
+export const dynamic = 'force-dynamic';
+
+import { NextResponse, NextRequest } from 'next/server';
+import { RestClient } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
+import { ServiceMetadata } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
+import { headers } from 'next/headers';
+
+export async function GET(request: NextRequest, { params }: { params: { } }) {
+
+    await ServiceMetadata.fetch();
+
+    const headersList = headers();
+    RestClient.host = headersList.get('host');
+
+    const getAllArgs: any = {
+        selectionModeString: '',
+        levelsToInclude: 3,
+        showParentPage: false,
+        selectedPages: undefined,
+    };
+
+    const items = await RestClient.getNavigation(getAllArgs);
+
+    return NextResponse.json(items);
+}
+
+
+```
+
+## Legacy MVC & Webforms pages handling
+
+In order to handle legacy pages to be proxied and not rendered, they have to be excluded from the middleware.ts file. The best way is to add them to the 'whitelistedPaths' variable in the middleware.ts file. This way they are directly proxied and not handled.
+
+``` JSX
+
+```
 
 ## CSP Headers
 
-The default CSP headers are registered in the [next.config.js file](./next.config.js)
+The default CSP headers are registered in the **next.config.js file**
 
 ## Getting started
 
