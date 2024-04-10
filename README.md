@@ -9,7 +9,7 @@ This is a repository contains the samples to demonstrate how to develop your fro
 To create a project from scratch use the command
 
 ``` bash
-npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/nextjs-samples/tree/main/starter-template"
+npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/nextjs-samples/tree/main/src/starter-template"
 ```
 
 2. Run in the console
