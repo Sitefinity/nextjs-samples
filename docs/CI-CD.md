@@ -3,8 +3,6 @@ CI & CD
 
 # Running in local development mode
 
-When developing you will need access to the WYSIWYG editor and the backend at the same time to drop your widgets and configure them. The 'development mode' enables this by using the 'http-proxy-middleware' package to proxy any CMS related requests to the CMS and allows the Renderer to handle only the frontend rendering of the pages.
-
 Running in dev mode **does not require installing additional software and works on any nodejs supported OS**. Follow these steps:
 
 ## Running under https

@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@progress/sitefinity-widget-designers-sdk": "0.1.4",
-    "@progress/sitefinity-nextjs-sdk": "0.1.15-beta.0",
+    "@progress/sitefinity-nextjs-sdk": "0.1.21-beta.0",
     "bootstrap": "5.3.2",
     "next": "14.0.3",
     "react": "18.2.0",
@@ -21,7 +21,6 @@
     "eslint": "8.54.0",
     "eslint-config-next": "14.0.3",
     "eslint-config-prettier": "9.0.0",
-    "http-proxy-middleware": "2.0.6",
     "prettier": "3.1.0",
     "ts-node": "10.9.1",
     "typescript": "5.3.2"

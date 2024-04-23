@@ -9,7 +9,7 @@ This is a repository contains the samples to demonstrate how to develop your fro
 To create a project from scratch use the command
 
 ``` bash
-npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/nextjs-samples/tree/main/src/starter-template"
+npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/nextjs-samples/tree/main/starter-template"
 ```
 
 2. Run in the console
@@ -108,6 +108,20 @@ export async function GET(request: NextRequest, { params }: { params: { } }) {
 
     const headersList = headers();
     RestClient.host = headersList.get('host');
+
+    // cache the response for 60 seconds
+    RestClient.additionalFetchData = { next: { revalidate: 60 } };
+
+    // passing the params sfaction, sf_site, sf_culture in edit mode
+    // these params can be extracted from the window object when page is beeing rendered in edit
+    const isEdit = request.nextUrl.searchParams.get("sfaction") === 'edit';
+    const siteId = request.nextUrl.searchParams.get("sf_site");
+    const culture = request.nextUrl.searchParams.get("sf_culture");
+
+    RestClient.contextQueryParams = {
+        sf_culture: culture,
+        sf_site: isEdit ? siteId : ''
+    };
 
     const getAllArgs: any = {
         selectionModeString: '',

@@ -84,6 +84,10 @@
   display: none;
 }
 
+.accordion-button:not(.collapsed) {
+  background-color: #e7f1ff;
+}
+
 .accordion-header .nav-link {
   font-weight: 500;
   color: #0c63e4;
@@ -105,7 +109,7 @@
 
 .-sf-facebook-button:hover {
   color: #fff;
-  background-color: #3E86B4;   
+  background-color: #3E86B4;
 }
 
 .-sf-github-button {
@@ -114,7 +118,7 @@
 
 .-sf-github-button:hover {
   color: #fff;
-  background-color: #333;   
+  background-color: #333;
 }
 
 .-sf-yahoo-button {
@@ -123,7 +127,7 @@
 
 .-sf-yahoo-button:hover {
   color: #fff;
-  background-color: #410093;   
+  background-color: #410093;
 }
 
 .-sf-linkedin-button {
@@ -132,7 +136,7 @@
 
 .-sf-linkedin-button:hover {
   color: #fff;
-  background-color: #0077b5;   
+  background-color: #0077b5;
 }
 
 .-sf-microsoft-button {
@@ -141,7 +145,7 @@
 
 .-sf-microsoft-button:hover {
   color: #fff;
-  background-color: #00a1f1;   
+  background-color: #00a1f1;
 }
 
 .-sf-adfs-button {
@@ -150,7 +154,7 @@
 
 .-sf-adfs-button:hover {
   color: #fff;
-  background-color: #00a1f1;   
+  background-color: #00a1f1;
 }
 
 .-sf-windows-button {
@@ -159,7 +163,7 @@
 
 .-sf-windows-button:hover {
   color: #fff;
-  background-color: #00bcf2;   
+  background-color: #00bcf2;
 }
 
 .-sf-twitter-button {
@@ -168,6 +172,6 @@
 
 .-sf-twitter-button:hover {
   color: #fff;
-  background-color: #1da1f2;   
+  background-color: #1da1f2;
 }
 /*#endregion External login buttons*/
