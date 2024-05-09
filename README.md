@@ -9,7 +9,7 @@ This is a repository contains the samples to demonstrate how to develop your fro
 To create a project from scratch use the command
 
 ``` bash
-npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/nextjs-samples/tree/main/starter-template"
+npx create-next-app nextjs-sitefinity --example "https://github.com/Sitefinity/nextjs-samples/tree/main/src/starter-template"
 ```
 
 2. Run in the console
@@ -61,6 +61,35 @@ If your project is hosted on Azure App Services, you need to make some specific 
 9. Set the name to AppGatewayHostRewriteModule
 10. In Path, navigate to the HostRewriteModule.dll, select it, and click OK.
 11. Ensure the checkbox next to AppGatewayHostRewriteModule is selected and click OK.
+
+## Additional project setup for Next.Js Renderer on IIS Hosting (**using HttpPlatformHandler**)
+
+If you wish to host your Next.JS Renderer under IIS, you need to setup IIS to act as a proxy to your original application. For this
+
+1. Install HttpPlatformHandler v1.2
+2. Add the following web.config file in the root of the web app (Be sure to replace the paths to node.js and next if they are different !)
+
+``` web.config
+
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <handlers>
+            <add name="httpPlatformHandler" path="*" verb="*" modules="httpPlatformHandler" resourceType="Unspecified" requireAccess="Script" />
+        </handlers>
+        <httpPlatform stdoutLogEnabled="true" stdoutLogFile=".\node.log" startupTimeLimit="20" processPath="C:\Program Files\nodejs\node.exe" arguments=".\node_modules\next\dist\bin\next dev">
+            <environmentVariables>
+                <environmentVariable name="PORT" value="%HTTP_PLATFORM_PORT%" />
+                <environmentVariable name="SF_PROXY_ORIGINAL_HOST" value="localhost:8081" />
+                <environmentVariable name="NODE_ENV" value="Development" />
+            </environmentVariables>
+        </httpPlatform>
+    </system.webServer>
+</configuration>
+
+
+```
+3. Set the **'SF_PROXY_ORIGINAL_HOST'** to the actual domain of the next.js renderer app that will be used for hosting in IIS.
 
 ## File structure
 

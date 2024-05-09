@@ -44,6 +44,7 @@ export async function middleware(request: NextRequest) {
         '/sfres',
         '/images',
         '/documents',
+        '/docs',
         '/videos',
         '/forms/submit',
         '/ExtRes',
@@ -92,7 +93,7 @@ function generateProxyRequest(request: NextRequest) {
         headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
     }
 
-    let resolvedHost =  request.nextUrl.host;
+    let resolvedHost = process.env.SF_PROXY_ORIGINAL_HOST || request.nextUrl.host;
     if (!resolvedHost) {
         if (process.env.PORT) {
             resolvedHost = `localhost:${process.env.PORT}`;
