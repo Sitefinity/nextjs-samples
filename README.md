@@ -167,6 +167,30 @@ export async function GET(request: NextRequest, { params }: { params: { } }) {
 
 ```
 
+## Fetching custom related fields with layout
+
+If you wish to limit your requests and fetch the custom related fields of the page being rendered in a single request, you can request them in the root page file.
+
+``` JSX
+
+export default async function Page({ params, searchParams }: any) {
+    initRendering(widgetRegistry, WidgetExecutionError);
+    return RenderPage({ params, searchParams, relatedFields: ['Image'] });
+}
+
+```
+
+And afterwards it can be acquired from the context of the widget:
+
+``` JSX
+
+export async function ContentBlock(props: WidgetContext<ContentBlockEntity>) {
+
+    const image = props.requestContext.layout.Fields['Image'];
+    ...
+
+```
+
 ## Legacy MVC & Webforms pages handling
 
 In order to handle legacy pages to be proxied and not rendered, they have to be excluded from the middleware.ts file. The best way is to add them to the 'whitelistedPaths' variable in the middleware.ts file. This way they are directly proxied and not handled.

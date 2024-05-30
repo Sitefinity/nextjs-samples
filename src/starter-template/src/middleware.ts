@@ -48,21 +48,21 @@ export async function middleware(request: NextRequest) {
         '/videos',
         '/forms/submit',
         '/ExtRes',
-        '/appstatus'
+        '/TranslationRes',
+        '/appstatus',
+        '/RBinRes'
     ];
 
     if (request.nextUrl.pathname.indexOf('.axd') !== -1 ||
         whitelistedPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
         cmsPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
-        /\/sitefinity(?!\/(template|forms))/i.test(request.nextUrl.pathname) ||
-        /Action\/(Edit|Preview)/i.test(request.nextUrl.pathname)
-        ) {
+        /\/sitefinity(?!\/(template|forms))/i.test(request.nextUrl.pathname)) {
 
         const {url, headers} = generateProxyRequest(request);
 
         if (request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.indexOf('/api/default') !== -1)) {
             // for some reason NextResponse.rewrite double encodes the URL, so this is necessary to remove the encoding
-            url.search = decodeURIComponent(url.search);
+            url.search = decodeEncodedSearchUriWithSpecialCharacters(url.search);
             let response = await fetch(url, {
                 headers: headers,
                 body: null,
@@ -119,4 +119,14 @@ function generateProxyRequest(request: NextRequest) {
     url.port = proxyURL.port;
 
     return { url, headers };
+}
+
+function decodeEncodedSearchUriWithSpecialCharacters(uri: string) {
+    const decoded = decodeURIComponent(uri);
+
+    if (/'/i.test(decoded)) {
+        return uri;
+    }
+
+    return decoded;
 }

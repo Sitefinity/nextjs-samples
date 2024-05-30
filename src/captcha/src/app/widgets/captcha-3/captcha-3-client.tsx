@@ -6,11 +6,20 @@ export function Captcha3Client(props: {captchaId: string, siteKey: string}) {
     const addSubmitAttributes = React.useCallback(()=>{
         const form = divRef.current?.closest('form');
         const submitButton = form!.querySelector('[data-sf-role="submit-button-container"] button');
-        if (submitButton) {
+        if (form && submitButton) {
             const submitId = props.captchaId;
             (window as any)[submitId] = function () {
-                form!.dispatchEvent(new Event('submit'));
+                if (form.requestSubmit) {
+                    if (submitButton) {
+                        form.requestSubmit(submitButton as HTMLElement);
+                    } else {
+                        form.requestSubmit();
+                    }
+                } else {
+                    form.submit();
+                }
             };
+
             submitButton.classList.add('g-recaptcha');
             submitButton.setAttribute('data-sitekey', props.siteKey);
             submitButton.setAttribute('data-callback', submitId);

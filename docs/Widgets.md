@@ -7,6 +7,72 @@ The WYSIWYG page editor of Sitefinity works with reusable components called widg
 
 The whole renderer framework for the react renderer is already built (including integration with the WYSIWYG editor), so all there is to do is just write 'React widgets'. Developing widgets for the NextJs Renderer is just like developing plain React Components. There are some integration points which we will go through. For this purpose find the bellow Hello World tutorial.
 
+## Default widgets
+
+### Registries
+
+The Sitefinity NextJS SDK provides a registry of OOB widgets with 2 variations currently - **defaultWidgetRegistry** and **legacyWidgetRegistry**. With _Sitefinity 15.1_ we have introduced a redesign of the widget selector in the WYSIWYG page editor, which differs visually completely and rearranges the widgets a different manner in terms of categories. Depending on your Sitefinity version, we suggest to use different default registries:
+
+#### Before Sitefinity 15.1:
+```ts
+import { initRegistry, legacyWidgetRegistry } from '@progress/sitefinity-nextjs-sdk';
+
+const customWidgetRegistry: WidgetRegistry = {
+    widgets: {
+        // ...
+    }
+};
+
+customWidgetRegistry.widgets = {
+    ...legacyWidgetRegistry.widgets,
+    ...customWidgetRegistry.widgets
+};
+
+export const widgetRegistry: WidgetRegistry = initRegistry(customWidgetRegistry);
+
+```
+
+#### After Sitefinity 15.1:
+```ts
+import { initRegistry, defaultWidgetRegistry } from '@progress/sitefinity-nextjs-sdk';
+
+const customWidgetRegistry: WidgetRegistry = {
+    widgets: {
+        // ...
+    }
+};
+
+customWidgetRegistry.widgets = {
+    ...defaultWidgetRegistry.widgets,
+    ...customWidgetRegistry.widgets
+};
+
+export const widgetRegistry: WidgetRegistry = initRegistry(customWidgetRegistry);
+```
+
+### Form widgets
+
+The OOB form widgets come with mixed SSR and CSR rendering. We provide a full CSR variation of these widgets (_CSRFormComponents_, _SSRFormComponents_, _LegacyCSRFormComponents_, _LegacySSRFormComponents_). To replace the SSR forms with full CSR forms, you need to override them in your registry:
+
+```ts
+import { WidgetRegistry, initRegistry, defaultWidgetRegistry, CSRFormComponents  } from '@progress/sitefinity-nextjs-sdk';
+
+const customWidgetRegistry: WidgetRegistry = {
+    widgets: {
+        // ...
+    }
+};
+
+customWidgetRegistry.widgets = {
+    ...defaultWidgetRegistry.widgets,
+    ...customWidgetRegistry.widgets,
+    ...CSRFormComponents
+};
+
+export const widgetRegistry: WidgetRegistry = initRegistry(customWidgetRegistry);
+
+```
+
 ## Hello World widget
 
 ### Building the component

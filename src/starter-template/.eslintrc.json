@@ -3,7 +3,7 @@
         "plugin:react/recommended",
         "next/core-web-vitals"
     ],
-    "ignorePatterns": ["**/dist/**", "/public/**"],
+    "ignorePatterns": ["**/dist/**", "/public/**", "sitefinity-e2e-tests" ],
     "rules": {
         "react-hooks/exhaustive-deps": "warn",
         "brace-style": ["error"],
