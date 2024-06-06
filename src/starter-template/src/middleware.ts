@@ -13,6 +13,11 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    if (request.nextUrl.search.indexOf('sfaction') !== -1 && !request.nextUrl.pathname.startsWith('/render')) {
+        let newUrl = new URL(`/render-page${request.nextUrl.pathname}${request.nextUrl.search}`, request.url);
+        return NextResponse.rewrite(newUrl);
+    }
+
     // handle available templates api call
     const match = request.nextUrl.pathname.match(templateRegex);
     if (match && match.groups) {
