@@ -33,6 +33,7 @@ export async function middleware(request: NextRequest) {
     const cmsPaths = [
         '/Sitefinity/Services',
         '/Sitefinity/adminapp',
+        '/SFSitemap',
         '/adminapp',
         '/sf/system',
         '/api/default',

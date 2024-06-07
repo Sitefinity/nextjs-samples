@@ -141,4 +141,4 @@ const customWidgetRegistry: WidgetRegistry = {
 
 #### HTML sanitization
 
-@progress/sitefinity-nextjs-sdk provides _SanitizerService.sanitizeHtml(html, config?)_ static method that uses server side and client side [DomPurify](https://www.npmjs.com/package/isomorphic-dompurify). The default configuration allows for some additional tags and attributes and could be overridden via _SanitizerService.configure(config)_ where the configuration object is a partial implementation of the DomPurify [configuration format](https://github.com/cure53/DOMPurify/blob/main/README.md#can-i-configure-dompurify).
+@progress/sitefinity-nextjs-sdk provides _SanitizerService.getInstance().sanitizeHtml(html, config?)_ static method that uses server side and client side [DomPurify](https://www.npmjs.com/package/isomorphic-dompurify). The default configuration allows for some additional tags and attributes and could be overridden via _SanitizerService.getInstance().configure(config)_ where the configuration object is a partial implementation of the DomPurify [configuration format](https://github.com/cure53/DOMPurify/blob/main/README.md#can-i-configure-dompurify).
