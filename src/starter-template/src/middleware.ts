@@ -88,7 +88,8 @@ export async function middleware(request: NextRequest) {
         });
     }
 
-    return NextResponse.next();
+    let newUrl = new URL(`/host:${request.nextUrl.host}${request.nextUrl.pathname}${request.nextUrl.search}`, request.url);
+    return NextResponse.rewrite(newUrl);
 }
 
 function generateProxyRequest(request: NextRequest) {
