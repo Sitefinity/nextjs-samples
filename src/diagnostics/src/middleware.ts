@@ -5,7 +5,6 @@ import { RootUrlService } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
 export const templateRegex = /\/sf\/system\/(?<type>.*?)\/Default\.GetPageTemplates\(selectedPages=(?<selectedPages>.*?)\)/;
 
 export async function middleware(request: NextRequest) {
-
     // handle known paths
     if (request.nextUrl.pathname.startsWith('/assets') ||
         request.nextUrl.pathname.startsWith('/_next') ||
@@ -25,39 +24,51 @@ export async function middleware(request: NextRequest) {
         }
     }
 
+    if (request.nextUrl.pathname === '/sfrenderer/api/v1/health/status') {
+        return new NextResponse(undefined, { status: 200 });
+    }
+
     // user defined paths that can be additionally proxied
     // can be used for legacy MVC/WebForms pages or paths that are entirely custom
     const whitelistedPaths: string[] = [];
+
+    if (process.env.SF_WHITELISTED_PATHS) {
+        const whiteListedPathsFromEnvironment = (process.env.SF_WHITELISTED_PATHS as string).split(',');
+        whitelistedPaths.push(...whiteListedPathsFromEnvironment);
+    }
 
     //handle known CMS paths
     const cmsPaths = [
         '/Sitefinity/Services',
         '/Sitefinity/adminapp',
-        '/SFSitemap',
+        '/Sitefinity/SignOut',
+        '/SFSitemap/',
         '/adminapp',
         '/sf/system',
         '/api/default',
-        '/ws',
-        '/restapi',
+        '/ws/',
+        '/restapi/',
         '/contextual-help',
-        '/res',
-        '/admin-bridge',
-        '/sfres',
-        '/images',
-        '/documents',
-        '/docs',
-        '/videos',
+        '/res/',
+        '/admin-bridge/',
+        '/sfres/',
+        '/images/',
+        '/documents/',
+        '/docs/',
+        '/videos/',
         '/forms/submit',
-        '/ExtRes',
-        '/TranslationRes',
-        '/appstatus',
-        '/RBinRes'
+        '/ExtRes/',
+        '/TranslationRes/',
+        '/RBinRes/',
+        '/ABTestingRes/',
+        '/DataIntelligenceConnector/'
     ];
 
     if (request.nextUrl.pathname.indexOf('.axd') !== -1 ||
         whitelistedPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
         cmsPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
-        /\/sitefinity(?!\/(template|forms))/i.test(request.nextUrl.pathname)) {
+        /\/sitefinity(?!\/(template|forms))/i.test(request.nextUrl.pathname) ||
+        isAppStatusRequest(request)) {
 
         const {url, headers} = generateProxyRequest(request);
 
@@ -107,7 +118,7 @@ function generateProxyRequest(request: NextRequest) {
         // for Sitefinity cloud
         headers.set('X-SF-BYPASS-HOST', resolvedHost);
         headers.set('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.SF_CLOUD_KEY);
-    } else {
+    } else if (!headers.has('X-ORIGINAL-HOST')) {
         headers.set('X-ORIGINAL-HOST', resolvedHost);
     }
 
@@ -130,4 +141,9 @@ function decodeEncodedSearchUriWithSpecialCharacters(uri: string) {
     }
 
     return decoded;
+}
+
+function isAppStatusRequest(request: NextRequest) {
+    return request.nextUrl.pathname.toLowerCase() === '/appstatus' &&
+        request.headers.get('accept')?.indexOf('application/json') !== -1;
 }

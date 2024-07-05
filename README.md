@@ -113,10 +113,6 @@ The starter template repository contains a set of files that are built specifica
 
 * src/app/api/template-interceptor* -> Api route related to the proxy logic. The purpose of this route is to intercept the page templates response and inject a custom page template that will serve as a base for all of the future templates.
 
-## Home page
-
-The default behavior for the home page is to redirect the root '/' path to '/home'. This can be configured in **next.config.js file**
-
 ## Custom api routes
 When using the RestClient in custom API routes be sure to initialize it first
 
@@ -132,25 +128,26 @@ import { ServiceMetadata } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
 import { headers } from 'next/headers';
 
 export async function GET(request: NextRequest, { params }: { params: { } }) {
-
-    await ServiceMetadata.fetch();
-
-    const headersList = headers();
-    RestClient.host = headersList.get('host');
-
-    // cache the response for 60 seconds
-    RestClient.additionalFetchData = { next: { revalidate: 60 } };
-
     // passing the params sfaction, sf_site, sf_culture in edit mode
     // these params can be extracted from the window object when page is beeing rendered in edit
     const isEdit = request.nextUrl.searchParams.get("sfaction") === 'edit';
     const siteId = request.nextUrl.searchParams.get("sf_site");
     const culture = request.nextUrl.searchParams.get("sf_culture");
 
-    RestClient.contextQueryParams = {
-        sf_culture: culture,
-        sf_site: isEdit ? siteId : ''
-    };
+    // The following parameters are used to initialize the rest sdk
+    // with some additional information but they are optional
+
+    // cache the response for 60 seconds
+    const additionalFetchData = { next: { revalidate: 60 } };
+    const host = headers().get('host') || '';
+    await initServerSideRestSdk({
+        additionalFetchData: additionalFetchData,
+        host: host,
+        queryParams: {
+            sf_culture: culture,
+            sf_site: isEdit ? siteId : ''
+        }
+    });
 
     const getAllArgs: any = {
         selectionModeString: '',
