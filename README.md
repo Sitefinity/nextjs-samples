@@ -87,9 +87,15 @@ If you wish to host your Next.JS Renderer under IIS, you need to setup IIS to ac
     </system.webServer>
 </configuration>
 
-
 ```
+
 3. Set the **'SF_PROXY_ORIGINAL_HOST'** to the actual domain of the next.js renderer app that will be used for hosting in IIS.
+
+## Additional project setup for Next.Js Renderer when hosted on docker
+When the renderer is hosted on docker the resolved host from the http request will be something in the form of 'localhost' or 'localhost:port'. The end result here would be that for every 21st request to a page you would recieve the license page since the domain of 'localhost' is not something registered in the licsense file of the CMS. To adjust for this, please make sure to pass to the X-ORIGINAL-HOST header, the proper value with the actual domain.
+
+If using a single site only you can pass the value through the **'SF_PROXY_ORIGINAL_HOST'** environment variable.
+If using a custom header value you can pass the custom header name through the **'SF_HOST_HEADER_NAME'** environment variable.
 
 ## File structure
 
@@ -190,11 +196,19 @@ export async function ContentBlock(props: WidgetContext<ContentBlockEntity>) {
 
 ## Legacy MVC & Webforms pages handling
 
-In order to handle legacy pages to be proxied and not rendered, they have to be excluded from the middleware.ts file. The best way is to add them to the 'whitelistedPaths' variable in the middleware.ts file. This way they are directly proxied and not handled.
+In order to handle legacy pages to be proxied and not rendered, they have to be excluded from the middleware.ts file. The best way is to add them to the `whitelistedPaths` variable in the middleware.ts file. This way they are directly proxied and not handled.
 
 ``` JSX
 
 ```
+### Legacy MVC & Webforms home page navigation
+
+If the home page of the site is legacy (MVC/Web forms) navigation to it can be proxied and not rendered in one of 2 ways:
+
+ - Navigating directly to the url: _'www.siteurl/homepage'_. This will require the home page to be listed in the `whitelistedPaths` like mentioned above
+ - Navigating directly to the url: _'www.siteurl/'_. This will require setting `SF_IS_HOME_PAGE_LEGACY="true"` in the `env.development` file.
+
+
 
 ## CSP Headers
 

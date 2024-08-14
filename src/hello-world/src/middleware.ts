@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-import { RootUrlService } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
+import { RootUrlService, RENDERER_NAME } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
 
 export const templateRegex = /\/sf\/system\/(?<type>.*?)\/Default\.GetPageTemplates\(selectedPages=(?<selectedPages>.*?)\)/;
 
@@ -61,14 +61,19 @@ export async function middleware(request: NextRequest) {
         '/TranslationRes/',
         '/RBinRes/',
         '/ABTestingRes/',
-        '/DataIntelligenceConnector/'
+        '/DataIntelligenceConnector/',
+        '/signin-facebook',
+        '/Frontend-Assembly/',
+        '/Telerik.Sitefinity.Frontend/'
     ];
 
     if (request.nextUrl.pathname.indexOf('.axd') !== -1 ||
         whitelistedPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
         cmsPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
-        /\/sitefinity(?!\/(template|forms))/i.test(request.nextUrl.pathname) ||
-        isAppStatusRequest(request)) {
+        request.nextUrl.pathname.toLowerCase() === '/sitefinity' ||
+        /\/sitefinity\/(?!(template|forms))/i.test(request.nextUrl.pathname) ||
+        isAppStatusRequest(request) ||
+        proxyHomePage(request)) {
 
         const {url, headers} = generateProxyRequest(request);
 
@@ -100,12 +105,15 @@ export async function middleware(request: NextRequest) {
 
 function generateProxyRequest(request: NextRequest) {
     const headers = new Headers(request.headers);
-    headers.append('X-SFRENDERER-PROXY', 'true');
+    headers.set('X-SFRENDERER-PROXY', 'true');
+    headers.set('X-SFRENDERER-PROXY-NAME', RENDERER_NAME);
     if (!headers.has('X-SF-WEBSERVICEPATH')) {
         headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
     }
 
     let resolvedHost = process.env.SF_PROXY_ORIGINAL_HOST || request.nextUrl.host;
+    let hostHeaderName = process.env.SF_HOST_HEADER_NAME || 'X-ORIGINAL-HOST';
+
     if (!resolvedHost) {
         if (process.env.PORT) {
             resolvedHost = `localhost:${process.env.PORT}`;
@@ -118,8 +126,8 @@ function generateProxyRequest(request: NextRequest) {
         // for Sitefinity cloud
         headers.set('X-SF-BYPASS-HOST', resolvedHost);
         headers.set('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.SF_CLOUD_KEY);
-    } else if (!headers.has('X-ORIGINAL-HOST')) {
-        headers.set('X-ORIGINAL-HOST', resolvedHost);
+    } else if (!headers.has(hostHeaderName)) {
+        headers.set(hostHeaderName, resolvedHost);
     }
 
     const proxyURL = new URL(process.env.SF_CMS_URL!);
@@ -146,4 +154,11 @@ function decodeEncodedSearchUriWithSpecialCharacters(uri: string) {
 function isAppStatusRequest(request: NextRequest) {
     return request.nextUrl.pathname.toLowerCase() === '/appstatus' &&
         request.headers.get('accept')?.indexOf('application/json') !== -1;
+}
+
+function proxyHomePage(request: NextRequest) {
+    // if home page is made with a renderer, it will be handled by the home page logic here in nextjs
+    // if it is legacy page (MVC, Web form), proxy the request to Sitefinity
+    const isLegacyHomePage: string = process.env.SF_IS_HOME_PAGE_LEGACY || 'false';
+    return request.nextUrl.pathname === '/' && isLegacyHomePage.toLocaleLowerCase() === 'true';
 }

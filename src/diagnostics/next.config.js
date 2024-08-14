@@ -14,6 +14,10 @@ module.exports = {
         return config;
     },
     skipTrailingSlashRedirect: true,
+    output: process.env.SF_BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
+    experimental: {
+        proxyTimeout: 60000
+    },
     logging: {
         fetches: {
             fullUrl: true

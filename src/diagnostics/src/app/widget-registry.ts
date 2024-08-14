@@ -1,6 +1,4 @@
 import { WidgetRegistry, initRegistry, defaultWidgetRegistry } from '@progress/sitefinity-nextjs-sdk';
-// import { HelloWorld } from './components/hello-world/hello-world';
-// import { HelloWorldEntity } from './components/hello-world/hello-world.entity';
 
 const customWidgetRegistry: WidgetRegistry = {
     widgets: {

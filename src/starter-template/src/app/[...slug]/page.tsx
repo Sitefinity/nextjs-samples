@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
-import { RenderPage, WidgetExecutionError, initRendering, pageMetadata } from '@progress/sitefinity-nextjs-sdk';
+import { RenderPage, initRendering, pageMetadata } from '@progress/sitefinity-nextjs-sdk/pages';
+import { WidgetExecutionError } from '@progress/sitefinity-nextjs-sdk';
 import { widgetRegistry } from '../widget-registry';
+import { templateRegistry } from '../template-registry';
 
 export async function generateMetadata({ params, searchParams }: any): Promise<Metadata> {
     initRendering(widgetRegistry, WidgetExecutionError);
@@ -9,5 +11,5 @@ export async function generateMetadata({ params, searchParams }: any): Promise<M
 
 export default async function Page({ params, searchParams }: any) {
     initRendering(widgetRegistry, WidgetExecutionError);
-    return RenderPage({ params, searchParams });
+    return RenderPage({ params, searchParams, templates: templateRegistry });
 }
