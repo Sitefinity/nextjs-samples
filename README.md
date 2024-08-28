@@ -170,6 +170,22 @@ export async function GET(request: NextRequest, { params }: { params: { } }) {
 
 ```
 
+## Cache configuration
+
+You can configure the default cache type or the revalidation duration in the environment settings file (e.g., *env.development*). If these properties are not specified during the REST SDK initialization or passed with GET requests, the cache settings will fallback to the configuration provided in the environment settings, if available.
+
+In the configuration, you can specify **SF_SDK_CACHE** and **SF_SDK_CACHE_REVALIDATE**.
+
+1. **SF_SDK_CACHE_REVALIDATE**: This property sets the cache lifetime of a resource in seconds. The possible values are:
+- **false**: Cache the resource indefinitely. This is semantically equivalent to revalidate: Infinity. Note that the HTTP cache may evict older resources over time.
+- **0**: Prevent the resource from being cached.
+- **number** (in seconds): Specify that the resource should have a cache lifetime of at most *number* seconds.
+2. **SF_SDK_CACHE**: This property configures how the request interacts with the Next.js data cache. For more details, refer to the [Next.js documentation on data caching](https://nextjs.org/docs/app/building-your-application/caching#data-cache). The possible values are:
+- **no-store** (default): Next.js fetches the resource from the remote server on every request without checking the cache, and it does not update the cache with the downloaded resource. The no-cache option behaves the same way as no-store.
+- **force-cache**: Next.js looks for a matching request in its Data Cache. If a fresh match is found, it is returned from the cache. If no match or a stale match is found, Next.js fetches the resource from the remote server and updates the cache with the downloaded resource.
+
+For more information, you can check the official documentation or resources related to [Next.js and caching](https://nextjs.org/docs/app/api-reference/functions/fetch).
+
 ## Fetching custom related fields with layout
 
 If you wish to limit your requests and fetch the custom related fields of the page being rendered in a single request, you can request them in the root page file.
@@ -196,11 +212,14 @@ export async function ContentBlock(props: WidgetContext<ContentBlockEntity>) {
 
 ## Legacy MVC & Webforms pages handling
 
-In order to handle legacy pages to be proxied and not rendered, they have to be excluded from the middleware.ts file. The best way is to add them to the `whitelistedPaths` variable in the middleware.ts file. This way they are directly proxied and not handled.
+In order for the NextJs renderer to handle legacy MVC and WebForms pages, their urls have to be explicitly specified in one of 2 places:
 
-``` JSX
-
+- In `middleware.ts` file there is a variable called `whitelistedPaths` which is an array of strings. The urls of the pages can be placed as separate strings:
+```tsx
+const whitelistedPaths: string[] = ['/legacypageurlone', '/legacypageurltwo'];
 ```
+- In `env.development` file by modifying the environmental variable like so: `SF_WHITELISTED_PATHS="/legacypageurlone,/legacypageurltwo"`.  More information about this configuration file can be found [here](./docs/CI-CD.md#environment-variables-legend).
+
 ### Legacy MVC & Webforms home page navigation
 
 If the home page of the site is legacy (MVC/Web forms) navigation to it can be proxied and not rendered in one of 2 ways:

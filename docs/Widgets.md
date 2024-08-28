@@ -376,6 +376,27 @@ You can create your own view logic based on the selected view name in the widget
 
 About the RenderView API usage, refer to the following [example of a custom widget view](https://github.com/Sitefinity/nextjs-samples/tree/main/src/widget-view).
 
+### Widget personalization operaiton
+Every custom widget that is created will have the personalization operation available in the page editor by default. That can be turned off by setting a flag in the editor metadata when registering the widget in the widget registry:
+
+```tsx
+const customWidgetRegistry: WidgetRegistry = {
+    widgets: {
+        '...': { // The name of the widget
+            componentType: ..., // The component function
+            entity: ..., // registration of the designer
+            editorMetadata: {
+                Title: '...',
+                WidgetBehavior: {
+                    NotPersonalizable: true // this will make the widget non-personalizable
+                }
+            } // metadata to be displayed in the WYSIWYG edotir - title, available operation, empty content visuals etc.
+            ssr: ... // whether this is a server rendered or client rendered component
+        }
+    }
+};
+```
+
 ### Other tooling
 
 #### HTML sanitization
