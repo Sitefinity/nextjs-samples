@@ -1,4 +1,4 @@
-import { ViewPropsBase } from '@progress/sitefinity-nextjs-sdk';
+import { ViewPropsBase } from '@progress/sitefinity-nextjs-sdk/widgets';
 import { WidgetViewEntity } from './widget-view-entity';
 
 export function WidgetViewDefaultView(props: ViewPropsBase<WidgetViewEntity>) {

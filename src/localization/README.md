@@ -1,5 +1,8 @@
 # Localized Hello World
 
+## Project setup
+To setup the project follow the instructions [here](./../../README.md#project-setup).
+
 ## Localizing via local dictionaries
 
 This sample demonstrates a Hello World widget with a localized label.

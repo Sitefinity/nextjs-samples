@@ -8,12 +8,12 @@ export function SitefinityTemplate({ widgets, requestContext}: { widgets: { [key
         <header data-sfcontainer="Header">
           {widgets['Header']}
         </header>
-        <header data-sfcontainer="Content">
+        <main data-sfcontainer="Content">
           {widgets['Content']}
-        </header>
-        <header data-sfcontainer="Footer">
+        </main>
+        <footer data-sfcontainer="Footer">
           {widgets['Footer']}
-        </header>
+        </footer>
       </>
     );
 }

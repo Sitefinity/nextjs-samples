@@ -12,9 +12,9 @@ export async function LocalizedHelloWorld(props: WidgetContext<LocalizedHelloWor
     const dict = await getDictionary(props.requestContext.culture);
 
     return (
-      <div>
+      <div {...dataAttributes}>
         <h1>{dict.message}</h1>
-        <h1 {...dataAttributes}>{props.model.Properties.Content}</h1>
+        <h1>{props.model.Properties.Content}</h1>
       </div>
     );
 }

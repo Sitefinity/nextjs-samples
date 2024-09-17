@@ -1,5 +1,8 @@
 # Hello World
 
-The sample holds 2 captcha widgets - [captcha-2](./src/app/widgets/captcha-2/captcha-2.tsx) and [captcha-3](./src/app/widgets/captcha-3/captcha-3.tsx).
+An example on how to create a hello world widget.
 
-For additional setup & dev instructions, see [Setup](https://github.com/sitefinity/nextjs-samples).
+This example demonstrates how to create a functional widget component that will be used to display a message configurable from the widget designer.
+
+## Project setup
+To setup the project follow the instructions [here](./../../README.md#project-setup).

@@ -8,3 +8,6 @@ Properties that the RenderView requires:
  - viewName: The name of the currently selected view (SfViewName), as defined in the `views` property in the widget registry
  - viewProps: [ViewPropsBase\<T>](https://github.com/Sitefinity/nextjs-sdk/blob/main/widgets/common/view-props-base.ts). It can be extended to include custom properties
  - children: A default implementation of a view that will be rendered if nothing is found in the `views` property with the provided `viewName`
+
+## Project setup
+To setup the project follow the instructions [here](./../../README.md#project-setup).

@@ -5,6 +5,9 @@ This example demonstrates 2 things:
 - how to replace the base functional component with a new one that applies some custom logic and still reuses the out of the box component
 - how to add an additional property in the widget designer
 
+## Project setup
+To setup the project follow the instructions [here](./../../README.md#project-setup).
+
 ## Implementation explained:
 
 You need to create a new functional component for the widget that will replace the existing one. It should have properties of type *WidgetContext<T>* where *T* is the widget entity type.

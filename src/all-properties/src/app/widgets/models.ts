@@ -121,26 +121,6 @@ export class ComplexWithNestingTableTable {
     public StringList: string[] | null = null;
 }
 
-@Model()
-export class FileTypes {
-    @DataType('string')
-    Type?: string | null = null;
-
-    @DataType('string')
-    Other?: string | null = null;
-}
-
 export class LinkModel {
     // noop
-}
-
-@Model()
-export class NumericRange {
-    @DefaultValue(null)
-    @DataType('number')
-    Min?: number | null = null;
-
-    @DefaultValue(null)
-    @DataType('number')
-    Max?: number | null = null;
 }

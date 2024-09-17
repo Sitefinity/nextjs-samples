@@ -5,7 +5,7 @@ export function Captcha3Client(props: {captchaId: string, siteKey: string}) {
     const divRef = React.useRef<HTMLDivElement>(null);
     const addSubmitAttributes = React.useCallback(()=>{
         const form = divRef.current?.closest('form');
-        const submitButton = form!.querySelector('[data-sf-role="submit-button-container"] button');
+        const submitButton = form?.querySelector('[data-sf-role="submit-button-container"] button');
         if (form && submitButton) {
             const submitId = props.captchaId;
             (window as any)[submitId] = function () {

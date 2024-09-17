@@ -15,9 +15,9 @@ export function LocalizedHelloWorldCSR(props: WidgetContext<LocalizedHelloWorldE
     i18n.changeLanguage(props.requestContext.culture);
 
     return (
-      <div>
+      <div {...dataAttributes}>
         <h1><Trans i18nKey="message" /></h1>
-        <h1 {...dataAttributes}>{props.model.Properties.Content}</h1>
+        <h1>{props.model.Properties.Content}</h1>
       </div>
     );
 }

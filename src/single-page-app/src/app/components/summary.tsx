@@ -2,18 +2,15 @@
 
 import { useContext } from 'react';
 import { CarContext } from '../carcontext';
-import { useLocation } from 'react-router';
 
 export function Summary() {
   const { car } = useContext(CarContext);
-  const location = useLocation();
 
-  if (car === null) {
-    return (<h1>Nothing selected</h1>);
-  }
-
-  if (location.pathname === '/') {
-    return null;
+  let btnDisabled = false;
+  let btnText = 'Submit';
+  if (car.cartype === 'none' || car.engine === 'none' || car.color === 'none'){
+      btnDisabled = true;
+      btnText = 'Select all car specifications to submit';
   }
 
   return (<div className="col"><div className="container" id="featured-3">
@@ -35,5 +32,6 @@ export function Summary() {
         <p>{car.color}</p>
       </div>
     </div>
-  </div></div>);
+  </div><div className="mb-3" data-sf-role="submit-button-container"><button type="submit" className="btn btn-primary" disabled={btnDisabled}>{btnText}</button></div>
+  </div>);
 }

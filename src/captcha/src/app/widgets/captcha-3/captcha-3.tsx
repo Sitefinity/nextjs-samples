@@ -13,6 +13,6 @@ export async function Captcha3(props: WidgetContext<any>) {
      />
       <Captcha3Client
         captchaId={captchaId}
-        siteKey={process.env.RECAPTCHA_SECRET_INVISIBLE_KEY || ''} />
+        siteKey={process.env.RECAPTCHA_SITE_KEY || ''} />
     </div>);
 }

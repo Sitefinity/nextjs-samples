@@ -1,6 +1,9 @@
 # Extend Content List Widget
 An example on how to extend the views of the content list widget by providing an implementation for a [custom list view](./cards-list-custom.view.tsx) and a [custom details view](./custom-detail.view.tsx).
 
+## Project setup
+To setup the project follow the instructions [here](./../../README.md#project-setup).
+
 ## List Views
 
 To define your own set of list views in the code, you must do the following:

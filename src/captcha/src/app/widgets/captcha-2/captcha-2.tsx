@@ -14,6 +14,6 @@ export async function Captcha2(props: WidgetContext<any>) {
         strategy={'lazyOnload'}
       />
       <Captcha2Client context={props.requestContext}
-        siteKey={process.env.RECAPTCHA_SECRET_KEY || ''} />
+        siteKey={process.env.RECAPTCHA_SITE_KEY || ''} />
     </div>);
 }

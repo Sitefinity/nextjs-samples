@@ -170,7 +170,7 @@ export async function GET(request: NextRequest, { params }: { params: { } }) {
 
 ```
 
-## Cache configuration
+## SDK cache configuration
 
 You can configure the default cache type or the revalidation duration in the environment settings file (e.g., *env.development*). If these properties are not specified during the REST SDK initialization or passed with GET requests, the cache settings will fallback to the configuration provided in the environment settings, if available.
 
@@ -181,7 +181,7 @@ In the configuration, you can specify **SF_SDK_CACHE** and **SF_SDK_CACHE_REVALI
 - **0**: Prevent the resource from being cached.
 - **number** (in seconds): Specify that the resource should have a cache lifetime of at most *number* seconds.
 2. **SF_SDK_CACHE**: This property configures how the request interacts with the Next.js data cache. For more details, refer to the [Next.js documentation on data caching](https://nextjs.org/docs/app/building-your-application/caching#data-cache). The possible values are:
-- **no-store** (default): Next.js fetches the resource from the remote server on every request without checking the cache, and it does not update the cache with the downloaded resource. The no-cache option behaves the same way as no-store.
+- **no-store**: Next.js fetches the resource from the remote server on every request without checking the cache, and it does not update the cache with the downloaded resource. The no-cache option behaves the same way as no-store.
 - **force-cache**: Next.js looks for a matching request in its Data Cache. If a fresh match is found, it is returned from the cache. If no match or a stale match is found, Next.js fetches the resource from the remote server and updates the cache with the downloaded resource.
 
 For more information, you can check the official documentation or resources related to [Next.js and caching](https://nextjs.org/docs/app/api-reference/functions/fetch).

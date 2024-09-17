@@ -5,6 +5,9 @@ The NextJS pages are based on templates that are stored in the Renderer applicat
 
 Out-of-the-box Sitefinity NextJS Renderer comes with a blank template called Default that you can select in the template selector. This template references Bootstrap5 CSS framework. The default Section widget templates also contain the Bootstrap5 grid system markup.
 
+## Project setup
+To setup the project follow the instructions [here](./../../README.md#project-setup).
+
 ## How to create custom template
 This sample demonstrates how to setup a custom template component that can be used as a base for building your NextJS application. Thel template is meant to contain the common HTML page structure like its head, body tags, common scripts and the styles for the page.
 

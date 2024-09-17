@@ -10,3 +10,6 @@ In [SitefinityData](./src/app/widgets/sitefinity-data/sitefinity-data.tsx), we r
 You can further refine the items you retrieve by providing additional arguments to the getItems request, such as skip, take, orderBy, filter, provider, or culture.
 
 In [SitefinityDataDefaultView](./src/app/widgets/sitefinity-data/sitefinity-data.view.tsx), we render the list of items, taking into consideration whether to render only the title or both the title and summary based on the option selected in the designer.
+
+## Project setup
+To setup the project follow the instructions [here](./../../README.md#project-setup).
