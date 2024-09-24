@@ -5,9 +5,9 @@
   "private": true,
   "dependencies": {
     "@progress/sitefinity-widget-designers-sdk": "0.1.7",
-    "@progress/sitefinity-nextjs-sdk": "0.5.0-beta.0",
+    "@progress/sitefinity-nextjs-sdk": "0.5.1-beta.0",
     "bootstrap": "5.3.3",
-    "next": "14.2.4",
+    "next": "14.2.12",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-i18next": "14.1.2",
