@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { RestClient, RENDERER_NAME, PageTemplateCategoryDto, PageTemplateCategoryType } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
-import { templateRegex } from '../../../../middleware';
+import { templateRegex } from '../../../../middlewares/middleware-backend';
 import { templateRegistry } from '../../../template-registry';
 
 export async function GET(request: Request, { params }: { params: { type: string } }) {

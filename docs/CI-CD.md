@@ -24,7 +24,7 @@ You host the Renderer at your public domain and your users use only this domain,
 ### Environment variables legend
 
 * (Required)**SF_CMS_URL** -> The URL of the CMS, where to proxy all of the requests that are not pages and to which all of the API call will be made.
-* (Required)**'SF_CLOUD_KEY'** -> The secret key to work with Sitefinity Cloud. **Required only when working with Sitefinity cloud**. Refer to this [doc](https://www.progress.com/documentation/sitefinity-cms/cloud/code-deployment)
+* (Required)**'SF_LOCAL_VALIDATION_KEY'** -> The secret key to work with Sitefinity Cloud. **Required only when working with Sitefinity cloud**. Refer to this [doc](https://www.progress.com/documentation/sitefinity-cms/cloud/code-deployment)
 * (Optional)**'NEXT_PUBLIC_SF_CMS_URL'** -> The URL of the CMS for client-side calls, to which all of the API call will be made. Defaults to **'/'**.
 * (Optional)**'SF_PROXY_ORIGINAL_HOST'** -> Environment variable that controls the host header sent to the CMS. Useful for multisite testing locally.
 * (Optional)**'SF_HOST_HEADER_NAME'** -> Environment variable that controls the host header sent to the CMS. Useful for cloud hosting when the original host is sent via a custom header value.
@@ -54,7 +54,7 @@ Additional project setup steps for Sitefinity CMS hosted in Sitefinity cloud:
 
 1. In Sitefinity Cloud, navigate to your dedicated Key Vault instance. For more information, see [Azure Key Vault](https://www.progress.com/documentation/sitefinity-cms/cloud/use-key-vault).
 Under **Secrets**, find the **LocalValidationKey** and copy the value of the secret.
-2. Set the **SF_CLOUD_KEY** environment variable with the value of the secret copied in the previous step.
+2. Set the **SF_LOCAL_VALIDATION_KEY** environment variable with the value of the secret copied in the previous step.
 
 ### Host Sitefinity CMS in Azure
 If your project is hosted on Azure App Services, you need to make some specific settings, so that your Sitefinity CMS can communicate with the Renderer application:

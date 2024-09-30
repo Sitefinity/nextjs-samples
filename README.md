@@ -25,7 +25,7 @@ npm i
 1. In Sitefinity Cloud, navigate to your dedicated Key Vault instance. For more information, see [Azure Key Vault](https://www.progress.com/documentation/sitefinity-cms/cloud/use-key-vault).
 Under Secrets, find the LocalValidationKey and copy the value of the secret.
 
-2. Set the **'SF_CLOUD_KEY'** environment variable with the value of the secret from the above step.
+2. Set the **'SF_LOCAL_VALIDATION_KEY'** environment variable with the value of the secret from the above step.
 
 ## Additional project setup for Standalone hosting of the CMS
 
