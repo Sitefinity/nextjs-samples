@@ -26,6 +26,8 @@ export async function GET(request: Request, { params }: { params: { type: string
     }
 
     const additionalHeaders: {[key: string]: string} = {};
+    const host = request.headers.get('host') || '';
+    additionalHeaders['host'] = host;
     const cookie = cookies().toString();
 
     RestClient.addAuthHeaders(cookie, additionalHeaders);
