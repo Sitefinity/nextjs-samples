@@ -1,6 +1,25 @@
-import { FileTypes, NumericRange } from '@progress/sitefinity-nextjs-sdk/widgets/forms';
-import { Browsable, Category, Choice, ChoiceItem, ChoiceWithText, Range, ColorPalette, ComplexType, ConditionalVisibility, Content, ContentContainer, ContentSection, ContentSectionTitles, Copy, DataModel, DataType, DateSettings, DecimalPlaces, DefaultValue, Description, DescriptionExtended, DisplayName, DisplaySettings, DynamicLinksContainer, FallbackToDefaultValueWhenEmpty, Group, KeysValues, KnownContentTypes, KnownFieldTypes, LengthDependsOn, LinkModel, MaxLength, MinLength, Mirror, MixedContentContext, Placeholder, PropertyCategory, Readonly, Required, SectionsOrder, StringLength, StylingConfig, Suffix, TableView, TaxonomyContent, Url, ViewSelector, WidgetEntity, WidgetLabel } from '@progress/sitefinity-widget-designers-sdk';
+import { Browsable, Category, Choice, ChoiceItem, ChoiceWithText, Range, ColorPalette, ComplexType, ConditionalVisibility, Content, ContentContainer, ContentSection, ContentSectionTitles, Copy, DataModel, DataType, DateSettings, DecimalPlaces, DefaultValue, Description, DescriptionExtended, DisplayName, DisplaySettings, DynamicLinksContainer, FallbackToDefaultValueWhenEmpty, Group, KeysValues, KnownContentTypes, KnownFieldTypes, LengthDependsOn, LinkModel, MaxLength, MinLength, Mirror, MixedContentContext, Placeholder, PropertyCategory, Readonly, Required, SectionsOrder, StringLength, StylingConfig, Suffix, TableView, TaxonomyContent, Url, ViewSelector, WidgetEntity, WidgetLabel, Model } from '@progress/sitefinity-widget-designers-sdk';
 import { BigComplexObject, ComplexObject, ComplexObjectNoDefaults, ComplexObjectWithContent, ComplexObjectWithLinks, ComplexWithNesting, ComplexWithNestingTable, ComplexWithNestingTableTable, MultiLevelComplexObject } from './models';
+
+@Model()
+export class NumericRange {
+    @DefaultValue(null)
+    @DataType('number')
+    Min?: number;
+
+    @DefaultValue(null)
+    @DataType('number')
+    Max?: number;
+}
+
+@Model()
+export class FileTypes {
+    @DataType('string')
+    Type?: string;
+
+    @DataType('string')
+    Other?: string;
+}
 
 enum EnumSingle {
     Value1 = 'Value1',

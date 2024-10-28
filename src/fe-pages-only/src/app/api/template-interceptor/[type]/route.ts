@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { RestClient, RENDERER_NAME, PageTemplateCategoryDto, PageTemplateCategoryType } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
-import { templateRegex } from '../../../../middlewares/middleware-backend';
+import { templateRegex } from '../../../../middleware';
 import { templateRegistry } from '../../../template-registry';
 
 export async function GET(request: Request, { params }: { params: { type: string } }) {
@@ -39,6 +39,17 @@ export async function GET(request: Request, { params }: { params: { type: string
 
     // get templates from server
     const templates = await RestClient.getTemplates({ type: params.type, selectedPages: selectedPages, additionalHeaders, additionalQueryParams });
+
+    // if there are no 'New editor' templates for the selected pages, do not add the NextJs ones
+    if (selectedPages.length > 0) {
+        const foundNewTemplateCategory = templates.find(x => x.Subtitle === 'New editor');
+        if (!foundNewTemplateCategory) {
+            return NextResponse.json({
+                value: templates
+            });
+        }
+    }
+
     let tempaltesToSkip: string[] = [];
 
     // find whether there is a category that holds templates for the renderer
@@ -69,27 +80,8 @@ export async function GET(request: Request, { params }: { params: { type: string
 
     templates.splice(0, 0, reactCategory);
 
-    // Check if there is currently used template
-    let currentlyUsed = templates.find(x => x.Type === PageTemplateCategoryType.CurrentlyUsed);
-    if (currentlyUsed && currentlyUsed.Templates.length === 1) {
-        currentlyUsed.Templates.forEach(x => (x.Framework as any) = 'React');
-
-        // If it comes from the registry it should be marked in order not to be duplicated
-        let sameTemplateKey = Object.keys(templateRegistry).find(x => `${RENDERER_NAME}.${x}` === currentlyUsed!.Templates[0].Name);
-        if (sameTemplateKey) {
-            tempaltesToSkip.push(sameTemplateKey);
-
-            // remove the currently used template from the server category
-            reactCategory.Templates = reactCategory.Templates.filter(x => x.Name !== currentlyUsed!.Templates[0].Name);
-        }
-
-        // move currently used category to top
-        const index = templates.indexOf(currentlyUsed);
-        templates.splice(index, 1);
-        templates.splice(0, 0, currentlyUsed);
-    }
-
     // add registry templates to the renderer category
+    const allNewEditorTemplateNames: string[] = [];
     for (const key in templateRegistry) {
         if (tempaltesToSkip.indexOf(key) === -1) {
             reactCategory.Templates.push({
@@ -100,7 +92,34 @@ export async function GET(request: Request, { params }: { params: { type: string
                 Title: templateRegistry[key].title,
                 UsedByNumberOfPages: 0
             });
+            allNewEditorTemplateNames.push(key);
         }
+    }
+
+    // set used by count
+    const templateStatisticsResponse = await RestClient.getTemplatesStatistics({ type: params.type, templateNames: allNewEditorTemplateNames, additionalHeaders, additionalQueryParams });
+    templateStatisticsResponse.forEach(templateStat => {
+        const template = reactCategory?.Templates.find(x => x.Name === `${RENDERER_NAME}.${templateStat.Name}`);
+        if (template) {
+            template.UsedByNumberOfPages = templateStat.Count;
+        }
+    });
+
+    // Check if there is currently used template
+    let currentlyUsed = templates.find(x => x.Type === PageTemplateCategoryType.CurrentlyUsed);
+    if (currentlyUsed && currentlyUsed.Templates.length === 1) {
+        currentlyUsed.Templates.forEach(x => (x.Framework as any) = 'React');
+
+        const foundSameReactTemplate = reactCategory.Templates.find(x => x.Name === currentlyUsed!.Templates[0].Name);
+        if (foundSameReactTemplate) {
+            currentlyUsed.Templates[0] = foundSameReactTemplate;
+            reactCategory.Templates = reactCategory.Templates.filter(x => x.Name !== currentlyUsed!.Templates[0].Name);
+        }
+
+        // move currently used category to top
+        const index = templates.indexOf(currentlyUsed);
+        templates.splice(index, 1);
+        templates.splice(0, 0, currentlyUsed);
     }
 
     return NextResponse.json({

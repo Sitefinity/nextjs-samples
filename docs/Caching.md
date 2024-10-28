@@ -47,48 +47,5 @@ For more information you can refer to the next.js documentation about [parallel 
 
 ## Route a request on a condition
 
-To dynamically set the caching strategy (force-static, auto, force-dynamic) for a route based on conditions like cookies, authentication status, or route segments in Next.js, you can use custom logic within your layout.tsx or page.tsx file.
-
-Use a middleware to check cookies and modify the request headers or the Next.js response accordingly.
-``` typescript
-// middleware.ts
-import { NextRequest, NextResponse } from 'next/server';
-
-export function middleware(request: NextRequest): NextResponse {
-  const hasAuthCookie = request.cookies.getAll().some(cookie => cookie.name.includes('AspNet.Cookies'));
-  let dynamic: 'auto' | 'force-static';
-
-  if (hasAuthCookie) {
-    dynamic = 'auto';  // set to 'auto' if user is authenticated
-  } else {
-    dynamic = 'force-static';  // otherwise, cache statically
-  }
-
-  request.headers.set('x-dynamic-route', dynamic);
-
-  return NextResponse.next();
-}
-```
-
-Set dynamic property in page.tsx or layout.tsx by using the custom header or condition directly in the component to determine the dynamic value.
-``` typescript
-// page.tsx
-import { NextRequest } from 'next/server';
-
-export const dynamic = async ({ request }: { request: NextRequest }): Promise<string> => {
-  const dynamicSetting = request.headers.get('x-dynamic-route');
-
-  if (dynamicSetting) {
-    return dynamicSetting;
-  }
-
-  return 'force-dynamic';  // default to dynamic if no condition is met
-};
-
-// or using a direct condition:
-export const dynamic = (props: Props): string => {
-  const hasAuthCookie = props.req.cookies.getAll().some(cookie => cookie.name.includes('AspNet.Cookies'));
-
-  return hasAuthCookie ? 'auto' : 'force-static';
-};
-```
+To dynamically set the caching strategy (force-static, auto, or force-dynamic) for a route based on conditions such as cookies, authentication status, or route segments in Next.js, you can implement custom logic to redirect the request to a different page slug, where the cache type and revalidation time are configured.
+You can see an example of this in the [auth-cache](../src/auth-cache/README.md) example.

@@ -90,7 +90,25 @@ If your project is hosted on a local IIS, you need to make some specific setting
 10. In **Path**, navigate to the **HostRewriteModule.dll**, select it, and click OK.
 11. Ensure the checkbox next to **AppGatewayHostRewriteModule** is selected and click OK.
 
-### Host Next.js Renderer on IIS (**using HttpPlatformHandler**)
+## Multisite domain management
+If you have a multisite Sitefinity CMS instance and you have configured more than one site in a your Sitefinity instance, you have to further configure the domains of the frontend for both the Sitefinity CMS application and the NextJs Renderer.
+
+#### **Case: Sitefinity CMS is hosted on IIS**
+If the Sitefinity CMS instance is hosted on IIS and the domains are placed on the Sitefinity CMS application, you must remove these bindings and place them on the NextJs Renderer application. These domains must be placed on the Renderer app, regardless of whether it is hosted on the same IIS on the same machine or on a different machine.
+
+For example, if your Sitefinity has two sites which have domains: **site1.com** and **site2.com**, when you configure a NextJs Renderer, these domains must remain the same for the renderer.
+
+For the **Sitefinity CMS application** do one of the following:
+- If hosted on the same IIS - localhost:8080 (port of your choosing)
+- If hosted on a different IIS – yourcustomdomain
+- If hosted on a different machine – the IP address of the machine where Sitefinity CMS is placed
+
+In general, place all the public multisite domains on the NextJs Renderer app and reserve a single non-public domain for the Sitefinity CMS app.
+
+#### **Case: Sitefinity CMS is behind a proxy (CDN, Reverse Proxy, Load Balancer)**
+In this case, the domain management is already placed on the proxy itself and the proxy forwards the specified Host header to Sitefinity CMS. You only need to redirect the proxy to forward the traffic to the NextJs Renderer app.
+
+### Host Next.js Renderer on **IIS** (**using HttpPlatformHandler**)
 If you wish to host your Next.JS Renderer under IIS, you need to setup IIS to act as a proxy to your original application:
 
 1. Install HttpPlatformHandler v1.2
@@ -101,13 +119,12 @@ If you wish to host your Next.JS Renderer under IIS, you need to setup IIS to ac
 <configuration>
     <system.webServer>
         <handlers>
-            <add name="httpPlatformHandler" path="*" verb="*" modules="httpPlatformHandler" resourceType="Unspecified" requireAccess="Script" />
+            <add name="httpPlatformhandler" path="*" verb="*" modules="httpPlatformHandler" resourceType="Unspecified" requireAccess="Script" />
         </handlers>
         <httpPlatform stdoutLogEnabled="true" stdoutLogFile=".\node.log" startupTimeLimit="20" processPath="C:\Program Files\nodejs\node.exe" arguments=".\node_modules\next\dist\bin\next dev">
             <environmentVariables>
                 <environmentVariable name="PORT" value="%HTTP_PLATFORM_PORT%" />
-                <environmentVariable name="SF_PROXY_ORIGINAL_HOST" value="localhost:8081" />
-                <environmentVariable name="NODE_ENV" value="Development" />
+                <environmentVariable name="NODE_ENV" value="development" />
             </environmentVariables>
         </httpPlatform>
     </system.webServer>

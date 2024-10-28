@@ -1,11 +1,11 @@
 const path = require('path');
 
 const cspHeader = `
-    script-src https://cdn.insight.sitefinity.com https://dec.azureedge.net https://player.vimeo.com/api/player.js https://www.youtube.com/iframe_api 'unsafe-eval' 'unsafe-inline' 'self';
-    style-src https://cdn.insight.sitefinity.com https://dec.azureedge.net 'self' 'unsafe-inline';
-    img-src https://cdn.insight.sitefinity.com https://dec.azureedge.net 'self' data:;
+    script-src https://cdn.insight.sitefinity.com https://dec.azureedge.net https://player.vimeo.com/api/player.js https://www.youtube.com/iframe_api *.googleapis.com 'unsafe-eval' 'unsafe-inline' 'self';
+    style-src https://cdn.insight.sitefinity.com https://dec.azureedge.net *.googleapis.com 'self' 'unsafe-inline';
+    img-src https://cdn.insight.sitefinity.com https://dec.azureedge.net https://*.frontify.com https://*.cloudinary.com 'self' data: blob:;
     connect-src https://*.insight.sitefinity.com https://*.dec.sitefinity.com 'self';
-    font-src 'self' data:;
+    font-src fonts.gstatic.com 'self' data:;
     default-src 'self'`;
 
 module.exports = {

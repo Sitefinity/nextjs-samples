@@ -1,6 +1,6 @@
 # Front end pages only
 
-This example demonstrates how to configure your app for production to work exclusively with front-end pages. The middleware should be simplified by removing any unnecessary logic, particularly any logic related to backend pages. To do this, remove the backend middleware check from the [middlewares.ts](./src/middlewares/middlewares.ts) file, as shown below:
+This example demonstrates how to configure your app for production to work exclusively with front-end pages. The middleware should be simplified by removing any unnecessary logic, particularly any logic related to backend pages. To do this, remove the backend middleware check from the [middleware.ts](./src/middleware.ts) file, as shown below:
 ``` typescript
 const resultBackend = await middlewareBackend(request);
 if (resultBackend instanceof NextResponse || resultBackend instanceof Response) {
