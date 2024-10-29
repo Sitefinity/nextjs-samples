@@ -97,7 +97,7 @@ export async function GET(request: Request, { params }: { params: { type: string
     }
 
     // set used by count
-    const templateStatisticsResponse = await RestClient.getTemplatesStatistics({ type: params.type, templateNames: allNewEditorTemplateNames, additionalHeaders, additionalQueryParams });
+    const templateStatisticsResponse = await RestClient.getTemplatesStatistics({ templateNames: allNewEditorTemplateNames, additionalHeaders, additionalQueryParams });
     templateStatisticsResponse.forEach(templateStat => {
         const template = reactCategory?.Templates.find(x => x.Name === `${RENDERER_NAME}.${templateStat.Name}`);
         if (template) {

@@ -9,7 +9,7 @@ Out-of-the-box Sitefinity NextJS Renderer comes with a blank template called Def
 To setup the project follow the instructions [here](./../../README.md#project-setup).
 
 ## How to create custom template
-This sample demonstrates how to setup a custom template component that can be used as a base for building your NextJS application. Thel template is meant to contain the common HTML page structure like its head, body tags, common scripts and the styles for the page.
+This sample demonstrates how to setup a custom template component that can be used as a base for building your NextJS application. The template is meant to contain the common HTML page structure like its head, body tags, common scripts and the styles for the page.
 
 Template inheritance is available for custom templates as well. You can base your Sitefinity templates on the custom templates from the NextJS Renderer.
 

@@ -39,7 +39,7 @@ async function middlewareFrontend(request: NextRequest) {
     // can be used for legacy MVC/WebForms pages or paths that are entirely custom
     const whitelistedPaths: string[] = [];
     if (process.env.SF_WHITELISTED_PATHS) {
-        const whiteListedPathsFromEnvironment = (process.env.SF_WHITELISTED_PATHS as string).split(',');
+        const whiteListedPathsFromEnvironment = (process.env.SF_WHITELISTED_PATHS as string).split(',').map(x => x.trim());
         whitelistedPaths.push(...whiteListedPathsFromEnvironment);
     }
 
@@ -49,11 +49,15 @@ async function middlewareFrontend(request: NextRequest) {
         '/forms/submit',
         '/sitefinity/anticsrf',
         '/sitefinity/login-handler',
-        '/sitefinity/signout/selflog'
+        '/sitefinity/signout/selflog',
+        '/ResourcePackages',
+        '/web-interface/calendars',
+        '/web-interface/events',
+        '/kendo'
     ];
 
     if (bypassHost ||
-        whitelistedPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
+        whitelistedPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path[0] === '/' ? path.toUpperCase() : `/${path.toUpperCase()}`)) ||
         cmsPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
         request.nextUrl.pathname.indexOf('.axd') !== -1 ||
         isAppStatusRequest(request) ||
@@ -111,6 +115,7 @@ async function middlewareBackend(request: NextRequest) {
 
     if (bypassHost ||
         request.nextUrl.pathname.indexOf('.axd') !== -1 ||
+        request.nextUrl.pathname.indexOf('.ashx') !== -1 ||
         cmsPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
         request.nextUrl.pathname.toLowerCase() === '/sitefinity' ||
         /\/sitefinity\/(?!(template|forms))/i.test(request.nextUrl.pathname)) {
@@ -124,8 +129,6 @@ async function rewriteSystemRequest(request: NextRequest, bypassHost: string) {
     const { url, headers } = generateProxyRequest(request, bypassHost);
 
     if (request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.indexOf('/api/default') !== -1)) {
-        // for some reason NextResponse.rewrite double encodes the URL, so this is necessary to remove the encoding
-        url.search = decodeEncodedSearchUriWithSpecialCharacters(url.search);
         let response = await fetch(url, {
             headers: headers,
             body: null,
@@ -139,11 +142,19 @@ async function rewriteSystemRequest(request: NextRequest, bypassHost: string) {
         return response;
     }
 
-    return NextResponse.rewrite(url, {
+    const response = NextResponse.rewrite(url, {
         request: {
             headers: headers
         }
     });
+
+    // nextjs issue - overriding of proxied headers is not working
+    // https://github.com/vercel/next.js/issues/70515
+    if (bypassHost) {
+        response.headers.set('sf-cache-control-override', 'no-cache');
+    }
+
+    return response;
 }
 
 function shouldBypassHost(request: NextRequest) {
@@ -219,14 +230,4 @@ function proxyHomePage(request: NextRequest) {
     // if it is legacy page (MVC, Web form), proxy the request to Sitefinity
     const isLegacyHomePage: string = process.env.SF_IS_HOME_PAGE_LEGACY || 'false';
     return request.nextUrl.pathname === '/' && isLegacyHomePage.toLocaleLowerCase() === 'true';
-}
-
-function decodeEncodedSearchUriWithSpecialCharacters(uri: string) {
-    const decoded = decodeURIComponent(uri);
-
-    if (/'/i.test(decoded)) {
-        return uri;
-    }
-
-    return decoded;
 }

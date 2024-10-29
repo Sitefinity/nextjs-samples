@@ -138,3 +138,42 @@ If you wish to host your Next.JS Renderer under IIS, you need to setup IIS to ac
 When the renderer is hosted on docker the resolved host from the http request will be something in the form of 'localhost' or 'localhost:port'. The end result here would be that for every 21st request to a page you would recieve the license page since the domain of 'localhost' is not something registered in the licsense file of the CMS. To adjust for this, please make sure to pass to the **X-ORIGINAL-HOST** header, the proper value with the actual domain.
 
 If using a single site only you can pass the value through the **SF_PROXY_ORIGINAL_HOST** environment variable.
+
+## Custom Error Pages
+
+If you want to use a custom "not found" error page by naming it with the status code (e.g., "404") and have the ability to create or edit it in production, you need to add an additional route for that page.
+When a page like this is in place, it will be shown in case of a 404 error, replacing the default system "not found" page.
+
+Go to **Administration » Settings » Advanced » Pages » Custom Error Pages » Error Types » 404** and check the **Redirect** option. This ensures that requests for a "not found" page will be routed through the newly created route and cached according to the configured cache settings.
+
+To create or edit a 404 page on production, first create a route named "404" and then add a page.tsx file for that route.
+``` tsx
+// src/app/404/page.tsx
+
+import { Metadata } from 'next';
+import { RenderPage, initRendering, pageMetadata } from '@progress/sitefinity-nextjs-sdk/pages';
+import { WidgetExecutionError } from '@progress/sitefinity-nextjs-sdk';
+import { widgetRegistry } from '../widget-registry';
+import { templateRegistry } from '../template-registry';
+
+export const dynamic = 'force-static';
+export const revalidate = 600;
+
+export async function generateMetadata({ params, searchParams }: any): Promise<Metadata> {
+    initRendering(widgetRegistry, WidgetExecutionError);
+    return await pageMetadata({ params: {slug: ['404']}, searchParams });
+}
+
+export default async function Page({ params, searchParams }: any) {
+    initRendering(widgetRegistry, WidgetExecutionError);
+    return RenderPage({ params: {slug: ['404']}, searchParams, templates: templateRegistry });
+}
+```
+
+Configure the cache settings for this route in production by setting **dynamic** to **force-static** and specifying the **revalidate** time to your preferred interval. For more information about cache settings, refer to the [cache control documentation](./Caching.md#full-route-cache-control).
+``` tsx
+export const dynamic = 'force-static';
+export const revalidate = 600;
+```
+
+In development mode, you can skip caching to immediately see changes while editing the page.
