@@ -252,7 +252,7 @@ We have created the Sitefinity Widget Designers SDK to make the process of defin
 
 If an entity class is missing one of the view name properties mentioned above, it can be extended:
 ```tsx
-import { LanguageSelectorEntity } from '@progress/sitefinity-nextjs-sdk';
+import { LanguageSelectorEntity } from '@progress/sitefinity-nextjs-sdk/widgets';
 import { DisplayName, DataType } from '@progress/sitefinity-widget-designers-sdk';
 
 export class LanguageSelectorEntityExtended extends LanguageSelectorEntity {
@@ -264,7 +264,7 @@ export class LanguageSelectorEntityExtended extends LanguageSelectorEntity {
 ### Widget default view
  The view function:
  ```tsx
-import { LanguageSelectorEntity, ViewPropsBase } from '@progress/sitefinity-nextjs-sdk';
+import { LanguageSelectorEntity, ViewPropsBase } from '@progress/sitefinity-nextjs-sdk/widgets';
 
 export function CustomLanguageSelectorView(props: ViewPropsBase<LanguageSelectorEntity>) {
     // attributes are needed for the widget to be visible in edit mode
@@ -292,7 +292,7 @@ export const widgetRegistry: WidgetRegistry = initRegistry(defaultWidgetRegistry
 ### Widget details view
 The widgets that support detail views are Content list and Document list. They can accept custom implementations for the detail rendering:
 ```tsx
-import { ViewPropsBase, ContentListEntity } from '@progress/sitefinity-nextjs-sdk';
+import { ViewPropsBase, ContentListEntity } from '@progress/sitefinity-nextjs-sdk/widgets';
 
 export function CustomContentListDetailsView(props: ViewPropsBase<ContentListEntity>) {
     // attributes are needed for the widget to be visible in edit mode
