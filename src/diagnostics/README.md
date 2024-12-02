@@ -28,7 +28,6 @@ module.exports = {
         config.resolve['alias']['@progress/sitefinity-nextjs-sdk/diagnostics/empty'] = '@progress/sitefinity-nextjs-sdk/diagnostics/dev';
 
         config.resolve['alias']['@widgetregistry'] = path.resolve(__dirname, 'src/app/widget-registry'); // <- this should be present by default in your project
-        config.resolve['alias']['@templateregistry'] = path.resolve(__dirname, 'src/app/template-registry'); // <- this should be present by default in your project
 
         return config;
     },
