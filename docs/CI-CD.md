@@ -30,6 +30,8 @@ You host the Renderer at your public domain and your users use only this domain,
 * (Optional)**'SF_HOST_HEADER_NAME'** -> Environment variable that controls the host header sent to the CMS. Useful for cloud hosting when the original host is sent via a custom header value.
 * (Optional)**'SF_WHITELISTED_PATHS'** -> Comma separated urls to pages made with the legacy (MVC/Web forms) frameworks so that the requests can be proxied to Sitefinity for them. Defaults to **''**.
 * (Optional)**'SF_IS_HOME_PAGE_LEGACY'** -> A flag indicating that the home page of the site is created with the legacy frameworks (MVC/Web forms) and navigation to _'www.siteurl/'_ will proxy the request to Sitefinity. Defaults to **'false'**.
+* (Optional) **SF_WEBSERVICE_PATH** -> Change the web service that the Next.js renderer instance should use. Keep in mind that a custom one should be created first in Sitefinity via _Settings > Web Services_. The service should be enabled and its access set to _Everyone_. The default value is **'api/default'**
+* (Optional) **SF_WHITELISTED_WEBSERVICES** -> A comma-separated urls for sitefinity web services that should be allowed through the proxy.
 
 # Deploy the Next.js renderer
 

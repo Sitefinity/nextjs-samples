@@ -5,6 +5,17 @@ const headerBypassHostValidationKey = 'X-SF-BYPASS-HOST-VALIDATION-KEY';
 const headerBypassHostKey = 'X-SF-BYPASS-HOST';
 export const templateRegex = /\/sf\/system\/(?<type>.*?)\/Default\.GetPageTemplates\(selectedPages=(?<selectedPages>.*?)\)/;
 
+const whitelistedServices: string[] = [];
+if (process.env.SF_WHITELISTED_WEBSERVICES) {
+    whitelistedServices.push(...process.env.SF_WHITELISTED_WEBSERVICES.split(',').map(x => x.trim()[0] === '/' ? x.trim() : `/${x.trim()}`));
+}
+
+const servicePath = process.env.SF_WEBSERVICE_PATH ?
+    process.env.SF_WEBSERVICE_PATH.trim()[0] === '/' ?
+    process.env.SF_WEBSERVICE_PATH.trim() :
+    `/${process.env.SF_WEBSERVICE_PATH.trim()}` :
+    '/api/default';
+
 export async function middleware(request: NextRequest) {
     const resultFrontend = await middlewareFrontend(request);
     if (resultFrontend instanceof Response) {
@@ -39,13 +50,13 @@ async function middlewareFrontend(request: NextRequest) {
     // can be used for legacy MVC/WebForms pages or paths that are entirely custom
     const whitelistedPaths: string[] = [];
     if (process.env.SF_WHITELISTED_PATHS) {
-        const whiteListedPathsFromEnvironment = (process.env.SF_WHITELISTED_PATHS as string).split(',').map(x => x.trim());
+        const whiteListedPathsFromEnvironment = (process.env.SF_WHITELISTED_PATHS as string).split(',').map(x => x.trim()[0] === '/' ? x.trim() : `/${x.trim()}`);
         whitelistedPaths.push(...whiteListedPathsFromEnvironment);
     }
 
     //handle known CMS paths
     const cmsPaths = [
-        '/api/default',
+        servicePath,
         '/forms/submit',
         '/sitefinity/anticsrf',
         '/sitefinity/login-handler',
@@ -53,11 +64,12 @@ async function middlewareFrontend(request: NextRequest) {
         '/ResourcePackages',
         '/web-interface/calendars',
         '/web-interface/events',
-        '/kendo'
+        '/kendo',
+        ...whitelistedServices,
+        ...whitelistedPaths
     ];
 
     if (bypassHost ||
-        whitelistedPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path[0] === '/' ? path.toUpperCase() : `/${path.toUpperCase()}`)) ||
         cmsPaths.some(path => request.nextUrl.pathname.toUpperCase().startsWith(path.toUpperCase())) ||
         request.nextUrl.pathname.indexOf('.axd') !== -1 ||
         isAppStatusRequest(request) ||
@@ -91,7 +103,7 @@ async function middlewareBackend(request: NextRequest) {
         '/SFSitemap/',
         '/adminapp',
         '/sf/system',
-        '/api/default',
+        servicePath,
         '/ws/',
         '/restapi/',
         '/contextual-help',
@@ -110,7 +122,8 @@ async function middlewareBackend(request: NextRequest) {
         '/DataIntelligenceConnector/',
         '/signin-facebook',
         '/Frontend-Assembly/',
-        '/Telerik.Sitefinity.Frontend/'
+        '/Telerik.Sitefinity.Frontend/',
+        ...whitelistedServices
     ];
 
     if (bypassHost ||
@@ -128,10 +141,11 @@ async function middlewareBackend(request: NextRequest) {
 async function rewriteSystemRequest(request: NextRequest, bypassHost: string) {
     const { url, headers } = generateProxyRequest(request, bypassHost);
 
-    if (request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.indexOf('/api/default') !== -1)) {
+    if ((request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.toUpperCase().indexOf(servicePath.toUpperCase()) !== -1)) ||
+        whitelistedServices.some(path => request.nextUrl.pathname.toUpperCase().indexOf(path.toUpperCase()) !== -1)) {
         let response = await fetch(url, {
             headers: headers,
-            body: null,
+            body: request.method === 'GET' ? null : request.body,
             method: request.method,
             credentials: 'include',
             redirect: 'follow'
