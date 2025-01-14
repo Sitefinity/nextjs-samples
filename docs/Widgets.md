@@ -210,8 +210,7 @@ After the view is implemented it should be registered in the widget registry:
 3. Add the new view the **views** property of the widget entry:
 
 ``` typescript
-const breadcrumbRegistration = defaultWidgetRegistry.widgets['SitefinityBreadcrumb'];
-breadcrumbRegistration.views['BreadcrumbCustomView'] = CustomView;
+addWidgetViews(defaultWidgetRegistry, 'SitefinityBreadcrumb', {'BreadcrumbCustomView': CustomView});
 
 export const widgetRegistry: WidgetRegistry = initRegistry(defaultWidgetRegistry);
 ```
@@ -248,16 +247,16 @@ We have created the Sitefinity Widget Designers SDK to make the process of defin
   - A function representing a NextJs component that will render the new view
   - That function must accept a [ViewPropsBase\<T>](https://github.com/Sitefinity/nextjs-sdk/blob/main/widgets/common/view-props-base.ts) where `T` is the entity related to the widget. Both the view props and entity can be extended with custom implementations that add additional properties which can be used in your view
   - The HTML of the new view must be wrapped in an element that has the `attributes` provided in the viewProps
-  - The view must be registered in the widget registry in the desired widget's `views` property and the entity class of that widget must have either a `SfViewName` or `SfDetailViewName` string properties marked with `@DataType('viewSelector')`.
+  - The view must be registered in the widget registry in the desired widget's `views` property and the entity class of that widget must have either a `SfViewName` or `SfDetailViewName` string properties marked with `@ViewSelector()`.
 
 If an entity class is missing one of the view name properties mentioned above, it can be extended:
 ```tsx
 import { LanguageSelectorEntity } from '@progress/sitefinity-nextjs-sdk/widgets';
-import { DisplayName, DataType } from '@progress/sitefinity-widget-designers-sdk';
+import { DisplayName, ViewSelector } from '@progress/sitefinity-widget-designers-sdk';
 
 export class LanguageSelectorEntityExtended extends LanguageSelectorEntity {
     @DisplayName('Details view')
-    @DataType('viewSelector')
+    @ViewSelector()
     SfDetailViewName: string;
 }
 ```
@@ -281,10 +280,10 @@ Then this function must be registered in the `views` property for the widget. In
 ```tsx
 import { initRegistry, defaultWidgetRegistry } from '@progress/sitefinity-nextjs-sdk';
 
-defaultWidgetRegistry.widgets['SitefinityLanguageSelector'].views!['CustomView'] = {
+addWidgetViews(defaultWidgetRegistry, 'SitefinityLanguageSelector', {'CustomView': {
     Title: 'Custom view',
     ViewFunction: CustomLanguageSelectorView
-};
+}});
 
 export const widgetRegistry: WidgetRegistry = initRegistry(defaultWidgetRegistry);
 ```
@@ -314,28 +313,28 @@ Then, it should be added in the views for the widget. There are some views alrea
 ```tsx
 import { initRegistry, defaultWidgetRegistry } from '@progress/sitefinity-nextjs-sdk';
 
-defaultWidgetRegistry.widgets['SitefinityContentList'].views!['Details.CustomContentListDetailsView'] = {
+addWidgetViews(defaultWidgetRegistry, 'SitefinityContentList', {'Details.CustomContentListDetailsView': {
     Title: 'Custom content list details view',
     ViewFunction: CustomContentListDetailsView
-};
+}});
 
 export const widgetRegistry: WidgetRegistry = initRegistry(defaultWidgetRegistry);
 ```
 ### The _views_ property of the widget metadata
-The views property can be used to add custom views or detail views to widgets. In order to use it, the widget's entity class should have one of two properties called `SfViewName` (used for the widget's view) and `SfDetailViewName` (Used for the detail view of a widget (Content list and Document list have it)). Both these properties should be marked with the decorator `@DataType('viewSelector')` and should be strings.
+The views property can be used to add custom views or detail views to widgets. In order to use it, the widget's entity class should have one of two properties called `SfViewName` (used for the widget's view) and `SfDetailViewName` (Used for the detail view of a widget (Content list and Document list have it)). Both these properties should be marked with the decorator `@ViewSelector()` and should be strings.
 
 For example:
 ```tsx
-import { WidgetEntity, DisplayName, DataType } from '@progress/sitefinity-widget-designers-sdk';
+import { WidgetEntity, DisplayName, ViewSelector } from '@progress/sitefinity-widget-designers-sdk';
 
 @WidgetEntity('CustomWidget', 'Custom widget')
 export class CustomWidgetEntity {
     @DisplayName('Widget view')
-    @DataType('viewSelector')
+    @ViewSelector()
     SfViewName: string;
 
     @DisplayName('Details view')
-    @DataType('viewSelector')
+    @ViewSelector()
     SfDetailViewName: string;
 }
 ```

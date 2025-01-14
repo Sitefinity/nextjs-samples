@@ -140,22 +140,6 @@ async function middlewareBackend(request: NextRequest) {
 
 async function rewriteSystemRequest(request: NextRequest, bypassHost: string) {
     const { url, headers } = generateProxyRequest(request, bypassHost);
-
-    if ((request.method === 'GET' && (request.nextUrl.pathname.indexOf('/sf/system') !== -1 || request.nextUrl.pathname.toUpperCase().indexOf(servicePath.toUpperCase()) !== -1)) ||
-        whitelistedServices.some(path => request.nextUrl.pathname.toUpperCase().indexOf(path.toUpperCase()) !== -1)) {
-        let response = await fetch(url, {
-            headers: headers,
-            body: request.method === 'GET' ? null : request.body,
-            method: request.method,
-            credentials: 'include',
-            redirect: 'follow'
-        }).catch((error) => {
-            console.error('There was a problem with the Fetch operation:', error);
-        });
-
-        return response;
-    }
-
     const response = NextResponse.rewrite(url, {
         request: {
             headers: headers

@@ -1,9 +1,9 @@
-import { ContentSection, DataType, DisplayName, WidgetEntity } from '@progress/sitefinity-widget-designers-sdk';
+import { ContentSection, DisplayName, ViewSelector, WidgetEntity } from '@progress/sitefinity-widget-designers-sdk';
 
 @WidgetEntity('WidgetView', 'Widget view')
 export class WidgetViewEntity {
     @ContentSection('Display settings')
     @DisplayName('Widget view')
-    @DataType('viewSelector')
+    @ViewSelector()
     SfViewName: string = 'Default';
 }
