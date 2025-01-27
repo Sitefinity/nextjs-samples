@@ -162,7 +162,7 @@ export class AllPropertiesEntity {
     @DataType('linkSelector')
     public LinkModel: LinkModel | null = null;
 
-    @DataType('linkSelector')
+    @DataType(ComplexType.Enumerable, 'linkSelector')
     public LinkModelMultiple: LinkModel[] | null = null;
 
     @DisplaySettings(true)

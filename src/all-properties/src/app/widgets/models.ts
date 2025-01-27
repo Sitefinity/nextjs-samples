@@ -9,8 +9,8 @@ export class ComplexObjectWithLinks {
     @DataType('linkSelector')
     public LinkModel: LinkModel | null = null;
 
-    @DataType('linkSelector')
-    public LinkModelMultiple: LinkModel[] | null = null;
+    @DataType(ComplexType.Enumerable, 'linkSelector')
+    public NestedLinkModelMultiple: LinkModel[] | null = null;
 }
 
 @Model()
