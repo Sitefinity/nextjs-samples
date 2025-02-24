@@ -1,11 +1,8 @@
 import Page from './[...slug]/page';
 import { Metadata } from 'next';
-import { initRendering, pageMetadata } from '@progress/sitefinity-nextjs-sdk/pages';
-import { WidgetExecutionError } from '@progress/sitefinity-nextjs-sdk';
-import { widgetRegistry } from './widget-registry';
+import { pageMetadata } from '@progress/sitefinity-nextjs-sdk/pages';
 
 export async function generateMetadata({ searchParams }: any): Promise<Metadata> {
-    initRendering(widgetRegistry, WidgetExecutionError);
     return await pageMetadata({ params: {slug: []}, searchParams });
 }
 
