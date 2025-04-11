@@ -4,28 +4,26 @@
   "license": "EULA.md",
   "private": true,
   "dependencies": {
-    "@progress/sitefinity-widget-designers-sdk": "0.2.9",
-    "@progress/sitefinity-nextjs-sdk": "15.2.8429",
+    "@progress/sitefinity-widget-designers-sdk": "0.3.0",
+    "@progress/sitefinity-nextjs-sdk": "15.3.8500",
     "bootstrap": "5.3.3",
-    "next": "14.2.25",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-i18next": "14.1.2",
-    "i18next": "23.11.5"
+    "next": "15.2.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-i18next": "15.4.0",
+    "i18next": "24.2.1"
   },
   "devDependencies": {
     "@types/bootstrap": "5.2.10",
     "@types/node": "20.14.8",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
-    "@typescript-eslint/eslint-plugin": "6.12.0",
-    "@typescript-eslint/parser": "6.12.0",
-    "eslint": "8.54.0",
-    "eslint-config-next": "14.2.4",
-    "eslint-config-prettier": "9.1.0",
-    "prettier": "3.3.2",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "@typescript-eslint/eslint-plugin": "8.19.1",
+    "@typescript-eslint/parser": "8.19.1",
+    "eslint": "9.18.0",
+    "eslint-config-next": "15.1.4",
     "ts-node": "10.9.2",
-    "typescript": "5.3.2"
+    "typescript": "5.7.3"
   },
   "scripts": {
     "prod": "next start",
