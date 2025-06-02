@@ -31,9 +31,9 @@ module.exports = {
 
         return config;
     },
-    serverExternalPackages:[
-        "@opentelemetry/sdk-node",
-    ]
+    experimental: {
+        instrumentationHook: true
+    }
     // ...
 }
 ```

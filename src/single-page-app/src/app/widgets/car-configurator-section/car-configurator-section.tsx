@@ -66,7 +66,7 @@ function populateColumn(context: WidgetContext<CarConfiguratorSectionEntity>): F
         children = context.model.Children.filter(x => x.PlaceHolder === columnName).map((x => {
             const ret: WidgetContext<any> = {
                 model: x,
-                metadata: getMinimumMetadata(RenderWidgetService.widgetRegistry.widgets[x.Name], context.requestContext.isEdit),
+                metadata: getMinimumMetadata(RenderWidgetService.widgetRegistry.widgets[x.Name]),
                 requestContext: context.requestContext
             };
 

@@ -6,7 +6,7 @@ import { RestClient, RENDERER_NAME, PageTemplateCategoryDto, PageTemplateCategor
 import { templateRegex } from '../../../../middleware';
 import { templateRegistry } from '../../../template-registry';
 
-export async function GET(request: Request, { params }: { params: Promise<{ type: string }> }) {
+export async function GET(request: Request, { params }: { params: { type: string } }) {
     const parsedUrl = new URL(request.url);
 
     let selectedPages: string[] = [];
@@ -28,7 +28,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
     const additionalHeaders: {[key: string]: string} = {};
     const host = request.headers.get('host') || '';
     additionalHeaders['host'] = host;
-    const cookie = (await cookies()).toString();
+    const cookie = cookies().toString();
 
     RestClient.addAuthHeaders(cookie, additionalHeaders);
 
@@ -38,7 +38,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
     }
 
     // get templates from server
-    const templates = await RestClient.getTemplates({ type: (await params).type, selectedPages: selectedPages, additionalHeaders, additionalQueryParams });
+    const templates = await RestClient.getTemplates({ type: params.type, selectedPages: selectedPages, additionalHeaders, additionalQueryParams });
 
     // if there are no 'New editor' templates for the selected pages, do not add the NextJs ones
     if (selectedPages.length > 0) {
