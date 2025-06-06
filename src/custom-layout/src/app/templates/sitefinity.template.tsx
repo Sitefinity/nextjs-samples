@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { ReactNode } from 'react';
 import { RequestContext } from '@progress/sitefinity-nextjs-sdk';
 

@@ -206,6 +206,10 @@ function generateProxyRequest(request: NextRequest, bypassHost: string) {
         headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
     }
 
+    if (!headers.has('x-sf-correlation-id')) {
+        headers.set('x-sf-correlation-id', generateRandomString());
+    }
+
     let resolvedHost = process.env.SF_PROXY_ORIGINAL_HOST || request.headers.get('X-FORWARDED-HOST') || request.nextUrl.host;
 
     if (!resolvedHost) {
@@ -262,4 +266,16 @@ function decodeEncodedSearchUriWithSpecialCharacters(uri: string) {
     }
 
     return decoded;
+}
+
+function generateRandomString() {
+    let result = '';
+    let length = 16;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
 }
