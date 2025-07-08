@@ -145,7 +145,7 @@ export async function GET(request: NextRequest, { params }: { params: { } }) {
 
     // cache the response for 60 seconds
     const additionalFetchData = { next: { revalidate: 60 } };
-    const host = headers().get('host') || '';
+    const host = (await headers()).get('host') || '';
     await initServerSideRestSdk({
         additionalFetchData: additionalFetchData,
         host: host,
