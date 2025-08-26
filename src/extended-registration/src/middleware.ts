@@ -10,6 +10,11 @@ if (process.env.SF_WHITELISTED_WEBSERVICES) {
     whitelistedServices.push(...process.env.SF_WHITELISTED_WEBSERVICES.split(',').map(x => x.trim()[0] === '/' ? x.trim() : `/${x.trim()}`));
 }
 
+const whitelistedNextJsPagePaths: string[] = [];
+if (process.env.SF_WHITELISTED_NEXTJS_PATHS) {
+    whitelistedNextJsPagePaths.push(...process.env.SF_WHITELISTED_NEXTJS_PATHS.split(',').map(x => x.trim()[0] === '/' ? x.trim() : `/${x.trim()}`));
+}
+
 const servicePath = process.env.SF_WEBSERVICE_PATH ?
     process.env.SF_WEBSERVICE_PATH.trim()[0] === '/' ?
     process.env.SF_WEBSERVICE_PATH.trim() :
@@ -29,6 +34,26 @@ export async function middleware(request: NextRequest) {
         return resultBackend;
     }
 
+    if (whitelistedNextJsPagePaths && whitelistedNextJsPagePaths.length > 0) {
+
+        // handles edit and preview cases
+        if (request.nextUrl.searchParams.has('sfaction')) {
+            return NextResponse.next();
+        }
+
+        // handles frontend whitelisting of pages/
+        for (let i = 0; i < whitelistedNextJsPagePaths.length; i++) {
+            const path = whitelistedNextJsPagePaths[i];
+            if (request.nextUrl.pathname === path) {
+                return NextResponse.next();
+            }
+        }
+
+        let bypassHost = shouldBypassHost(request);
+        return rewriteSystemRequest(request, bypassHost, false);
+    }
+
+    // default behavior to render pages
     return NextResponse.next();
 }
 
@@ -138,8 +163,8 @@ async function middlewareBackend(request: NextRequest) {
     return request;
 }
 
-async function rewriteSystemRequest(request: NextRequest, bypassHost: string) {
-    const { url, headers } = generateProxyRequest(request, bypassHost);
+async function rewriteSystemRequest(request: NextRequest, bypassHost: string, sendRendererProxyHeaders: boolean = true) {
+    const { url, headers } = generateProxyRequest(request, bypassHost, sendRendererProxyHeaders);
     const response = NextResponse.rewrite(url, {
         request: {
             headers: headers
@@ -174,12 +199,14 @@ function shouldBypassHost(request: NextRequest) {
     return bypassHost;
 }
 
-function generateProxyRequest(request: NextRequest, bypassHost: string) {
+function generateProxyRequest(request: NextRequest, bypassHost: string, sendRendererProxyHeaders: boolean = true) {
     const headers = new Headers(request.headers);
-    headers.set('X-SFRENDERER-PROXY', 'true');
-    headers.set('X-SFRENDERER-PROXY-NAME', RENDERER_NAME);
-    if (!headers.has('X-SF-WEBSERVICEPATH')) {
-        headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
+    if (sendRendererProxyHeaders) {
+        headers.set('X-SFRENDERER-PROXY', 'true');
+        headers.set('X-SFRENDERER-PROXY-NAME', RENDERER_NAME);
+        if (!headers.has('X-SF-WEBSERVICEPATH')) {
+            headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
+        }
     }
 
     if (!headers.has('x-sf-correlation-id')) {
