@@ -106,14 +106,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ type
     });
 
     // Check if there is currently used template
-    let currentlyUsed = templates.find(x => x.Type === PageTemplateCategoryType.CurrentlyUsed);
+    let currentlyUsed = templates.find(x => x.Type === PageTemplateCategoryType.CurrentlyUsed || x.Title === 'Currently used');
     if (currentlyUsed && currentlyUsed.Templates.length === 1) {
         currentlyUsed.Templates.forEach(x => (x.Framework as any) = 'React');
 
-        const foundSameReactTemplate = reactCategory.Templates.find(x => x.Name === currentlyUsed!.Templates[0].Name);
+        const foundSameReactTemplate = reactCategory.Templates.find(x => x.Title === currentlyUsed!.Templates[0].Title && x.Name === currentlyUsed!.Templates[0].Name);
         if (foundSameReactTemplate) {
             currentlyUsed.Templates[0] = foundSameReactTemplate;
-            reactCategory.Templates = reactCategory.Templates.filter(x => x.Name !== currentlyUsed!.Templates[0].Name);
+            reactCategory.Templates = reactCategory.Templates.filter(x => x.Title !== currentlyUsed!.Templates[0].Title && x.Name !== currentlyUsed!.Templates[0].Name);
         }
 
         // move currently used category to top
