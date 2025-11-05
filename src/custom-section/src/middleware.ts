@@ -3,7 +3,6 @@ import { RootUrlService, RENDERER_NAME } from '@progress/sitefinity-nextjs-sdk/r
 
 const headerBypassHostValidationKey = 'X-SF-BYPASS-HOST-VALIDATION-KEY';
 const headerBypassHostKey = 'X-SF-BYPASS-HOST';
-export const templateRegex = /\/sf\/system\/(?<type>.*?)\/Default\.GetPageTemplates\(selectedPages=(?<selectedPages>.*?)\)/;
 
 const whitelistedServices: string[] = [];
 if (process.env.SF_WHITELISTED_WEBSERVICES) {
@@ -15,11 +14,7 @@ if (process.env.SF_WHITELISTED_NEXTJS_PATHS) {
     whitelistedNextJsPagePaths.push(...process.env.SF_WHITELISTED_NEXTJS_PATHS.split(',').map(x => x.trim()[0] === '/' ? x.trim() : `/${x.trim()}`));
 }
 
-const servicePath = process.env.SF_WEBSERVICE_PATH ?
-    process.env.SF_WEBSERVICE_PATH.trim()[0] === '/' ?
-    process.env.SF_WEBSERVICE_PATH.trim() :
-    `/${process.env.SF_WEBSERVICE_PATH.trim()}` :
-    '/api/default';
+const servicePath = RootUrlService.getWebServicePath();
 
 export async function middleware(request: NextRequest) {
     const resultFrontend = await middlewareFrontend(request);
@@ -81,7 +76,7 @@ async function middlewareFrontend(request: NextRequest) {
 
     //handle known CMS paths
     const cmsPaths = [
-        servicePath,
+        `/${servicePath}`,
         '/forms/submit',
         '/sitefinity/anticsrf',
         '/sitefinity/login-handler',
@@ -106,29 +101,22 @@ async function middlewareFrontend(request: NextRequest) {
 }
 
 async function middlewareBackend(request: NextRequest) {
-    let bypassHost = shouldBypassHost(request);
-
-    // handle available templates api call
-    const match = request.nextUrl.pathname.match(templateRegex);
-    if (!bypassHost && match && match.groups) {
-        const type = match.groups['type'];
-        const selectedPages = match.groups['selectedPages'];
-
-        if (type && selectedPages) {
-            let newUrl = new URL(`/api/template-interceptor/${type}`, request.url);
-            return NextResponse.rewrite(newUrl);
-        }
-    }
+    const bypassHost = shouldBypassHost(request);
 
     //handle known CMS paths
     const cmsPaths = [
+        servicePath,
+        ...whitelistedServices
+    ];
+
+    cmsPaths.push(...[
+        '/sf/',
         '/Sitefinity/Services',
         '/Sitefinity/adminapp',
         '/Sitefinity/SignOut',
         '/SFSitemap/',
         '/adminapp',
         '/sf/system',
-        servicePath,
         '/ws/',
         '/restapi/',
         '/contextual-help',
@@ -147,9 +135,8 @@ async function middlewareBackend(request: NextRequest) {
         '/DataIntelligenceConnector/',
         '/signin-facebook',
         '/Frontend-Assembly/',
-        '/Telerik.Sitefinity.Frontend/',
-        ...whitelistedServices
-    ];
+        '/Telerik.Sitefinity.Frontend/'
+    ]);
 
     if (bypassHost ||
         request.nextUrl.pathname.indexOf('.axd') !== -1 ||
@@ -204,6 +191,7 @@ function generateProxyRequest(request: NextRequest, bypassHost: string, sendRend
     if (sendRendererProxyHeaders) {
         headers.set('X-SFRENDERER-PROXY', 'true');
         headers.set('X-SFRENDERER-PROXY-NAME', RENDERER_NAME);
+
         if (!headers.has('X-SF-WEBSERVICEPATH')) {
             headers.set('X-SF-WEBSERVICEPATH', RootUrlService.getWebServicePath());
         }

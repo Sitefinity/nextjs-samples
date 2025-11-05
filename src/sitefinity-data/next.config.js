@@ -1,7 +1,7 @@
 const path = require('path');
 
 const cspHeader = `
-    script-src https://cdn.insight.sitefinity.com https://player.vimeo.com/api/player.js https://www.youtube.com/iframe_api *.googleapis.com 'unsafe-eval' 'unsafe-inline' 'self';
+    script-src https://cdnjs.cloudflare.com/ajax/libs/jquery https://cdn.insight.sitefinity.com https://player.vimeo.com/api/player.js https://www.youtube.com/iframe_api *.googleapis.com 'unsafe-eval' 'unsafe-inline' 'self';
     style-src https://cdn.insight.sitefinity.com *.googleapis.com 'self' 'unsafe-inline';
     img-src https://cdn.insight.sitefinity.com https://*.frontify.com https://*.cloudinary.com 'self' data: blob:;
     connect-src https://*.insight.sitefinity.com https://*.dec.sitefinity.com 'self';

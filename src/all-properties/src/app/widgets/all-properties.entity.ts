@@ -21,6 +21,24 @@ export class FileTypes {
     Other?: string;
 }
 
+class ManualSelectionEntity {
+    @DisplayName('Title')
+    Title: string = '';
+
+    @DisplayName('Url')
+    Url: string = '';
+
+    @DisplayName('Open link in a new window')
+    @DefaultValue(false)
+    @DataType(KnownFieldTypes.ChipChoice)
+    @Choice({Choices: [
+            { Name: 'Yes', Value: true },
+            { Name: 'No', Value: false }
+        ]
+    })
+    OpenInNewWindow: boolean = false;
+}
+
 enum EnumSingle {
     Value1 = 'Value1',
     Value2 = 'Value2',
@@ -378,6 +396,9 @@ export class AllPropertiesEntity {
 
     @Content({Type: KnownContentTypes.Pages, AllowMultipleItemsSelection: false, DisableInteraction: true, ShowSiteSelector: true})
     public Page: MixedContentContext | null = null;
+
+    @Content({ Type: KnownContentTypes.Pages, OpenMultipleItemsSelection: true, ManualSelection: { MainFieldName: 'Title', BreadcrumbText: 'External URL', IconClass: 'redirecting-page', TabTitle: 'External URLs', ManualSelectionEntityType: ManualSelectionEntity } })
+    public PagesWithManualSelection?: MixedContentContext;
 
     @Content({Type: 'Telerik.Sitefinity.DynamicTypes.Model.Pressreleases.PressRelease'})
     public PressReleases: MixedContentContext | null = null;
