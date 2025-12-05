@@ -46,7 +46,7 @@ export async function GET(request: Request) {
     }
 
     // Hack for the old SF: if there are legacy templates for the selected pages, do not add the NextJs ones
-    if (process.env.SF_NEXT_GEN !== 'true' && process.env.SF_NEXT_GEN !== '1' && selectedPages.length > 0) {
+    if (process.env.NEXT_PUBLIC_SF_NEXT_GEN !== 'true' && process.env.NEXT_PUBLIC_SF_NEXT_GEN !== '1' && selectedPages.length > 0) {
         const foundLegacyTemplateCategory = templates.find(x => x.Subtitle !== 'New editor' && x.Type !== PageTemplateCategoryType.CurrentlyUsed);
         if (foundLegacyTemplateCategory) {
             return NextResponse.json({

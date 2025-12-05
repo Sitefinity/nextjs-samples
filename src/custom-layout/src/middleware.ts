@@ -134,6 +134,9 @@ async function middlewareBackend(request: NextRequest) {
         '/ABTestingRes/',
         '/DataIntelligenceConnector/',
         '/signin-facebook',
+        '/signin-google',
+        '/signin-microsoft',
+        '/signin-twitter',
         '/Frontend-Assembly/',
         '/Telerik.Sitefinity.Frontend/'
     ]);
