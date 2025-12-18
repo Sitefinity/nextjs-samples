@@ -1,0 +1,35 @@
+{
+  "name": "sitefinity-react-renderer",
+  "version": "0.1.0",
+  "license": "EULA.md",
+  "private": true,
+  "dependencies": {
+    "@progress/sitefinity-widget-designers-sdk": "0.4.0",
+    "@progress/sitefinity-nextjs-sdk": "15.4.8623",
+    "bootstrap": "5.3.3",
+    "next": "15.4.10",
+    "react": "19.0.3",
+    "react-dom": "19.0.3",
+    "react-i18next": "15.4.0",
+    "i18next": "24.2.1"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "5.2.10",
+    "@types/node": "20.14.8",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "@typescript-eslint/eslint-plugin": "8.19.1",
+    "@typescript-eslint/parser": "8.19.1",
+    "eslint": "9.18.0",
+    "eslint-config-next": "15.1.4",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.3"
+  },
+  "scripts": {
+    "prod": "next start",
+    "dev": "next dev --experimental-https -p 5001",
+    "build": "next build",
+    "lint": "eslint . --quiet",
+    "lint:fix": "eslint . --fix"
+  }
+}
