@@ -1,21 +1,8 @@
-import { WidgetRegistry, initRegistry, defaultWidgetRegistry } from '@progress/sitefinity-nextjs-sdk';
+import { WidgetRegistry, initRegistry, defaultWidgetRegistry, addWidgetViews } from '@progress/sitefinity-nextjs-sdk';
+import { RegistrationCaptchaV2View } from './widgets/registration-captcha-v2/registration-captcha-v2.view';
+import { RegistrationCaptchaV3View } from './widgets/registration-captcha-v3/registration-captcha-v3.view';
 
-const customWidgetRegistry: WidgetRegistry = {
-    widgets: {
-        // 'HelloWorld': {
-        //     componentType: HelloWorld, // registration of the widget
-        //     entity: HelloWorldEntity, // registration of the designer
-        //     ssr: true, // whether this is a server rendered or client rendered component
-        //     editorMetadata: {
-        //         Title: 'Hello World'
-        //     }
-        // }
-    }
-};
+addWidgetViews(defaultWidgetRegistry, 'SitefinityRegistration', {'RegistrationCaptchaV2': RegistrationCaptchaV2View});
+addWidgetViews(defaultWidgetRegistry, 'SitefinityRegistration', {'RegistrationCaptchaV3': RegistrationCaptchaV3View});
 
-customWidgetRegistry.widgets = {
-    ...defaultWidgetRegistry.widgets,
-    ...customWidgetRegistry.widgets
-};
-
-export const widgetRegistry: WidgetRegistry = initRegistry(customWidgetRegistry);
+export const widgetRegistry: WidgetRegistry = initRegistry(defaultWidgetRegistry);
