@@ -12,7 +12,7 @@ export interface VersionInfoDto {
  * Uses the NextJS RestClient infrastructure to properly handle OData API calls
  * This provides the same functionality as .NET Core SitefinityAssistantClient
  */
-export class PARAGAssistantApiClient {
+export class PARAGApiClient {
     /**
      * Gets version information from Sitefinity Assistant API
      * Calls the Sitefinity OData unbound function to get version info

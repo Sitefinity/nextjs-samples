@@ -33,7 +33,6 @@ To setup the project follow the instructions [here](./../../README.md#project-se
 
 ```
 SF_ASSISTANT_CDN_HOSTNAME=cdn.assistant.api.sitefinity.cloud
-SF_ASSISTANT_CDN_ROOT_FOLDER_RELATIVE_PATH=prod
 SF_WHITELISTED_WEBSERVICES='/parag'
 ```
 

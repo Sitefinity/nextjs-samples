@@ -4,8 +4,8 @@ import { getCustomAttributes } from '@progress/sitefinity-nextjs-sdk';
 import { RestClient } from '@progress/sitefinity-nextjs-sdk/rest-sdk';
 import { Tracer } from '@progress/sitefinity-nextjs-sdk/diagnostics/empty';
 import Script from 'next/script';
-import { PARAGAssistantApiClient } from './parag-assistant-api-client';
-import { PARAGAssistantConfig } from './parag-assistant-config';
+import { PARAGApiClient } from '../parag-api-client';
+import { PARAGConfig } from '../parag-config';
 
 async function getSingleSelectedImageUrlAsync(image: any | null | undefined): Promise<string | null> {
     if (!image || !image.ItemIdsOrdered || image.ItemIdsOrdered.length !== 1) {
@@ -36,16 +36,16 @@ export async function PARAGAssistant(props: WidgetContext<PARAGAssistantEntity>)
     let dataAttributes = htmlAttributes(props);
 
     // Get version information from Sitefinity Assistant admin API
-    const versionInfo = await PARAGAssistantApiClient.getVersionInfoAsync();
+    const versionInfo = await PARAGApiClient.getVersionInfoAsync();
     const version = versionInfo?.ProductVersion;
 
     const cdnUrls = {
-        jqueryUrl: PARAGAssistantConfig.getCdnUrl('jquery.min.js', version),
-        markedUrl: PARAGAssistantConfig.getCdnUrl('marked.min.js', version),
-        chatJsUrl: PARAGAssistantConfig.getCdnUrl('sf-assistant-chat.js', version),
-        chatServiceUrl: PARAGAssistantConfig.getCdnUrl('parag-chat-service.js', version),
-        widgetCssUrl: PARAGAssistantConfig.getCdnUrl('sf-assistant-chat-widget.min.css', version),
-        widgetJsUrl: PARAGAssistantConfig.getCdnUrl('sf-assistant-widget.js', version)
+        jqueryUrl: PARAGConfig.getCdnUrl('jquery.min.js', version),
+        markedUrl: PARAGConfig.getCdnUrl('marked.min.js', version),
+        chatJsUrl: PARAGConfig.getCdnUrl('sf-assistant-chat.js', version),
+        chatServiceUrl: PARAGConfig.getCdnUrl('parag-chat-service.js', version),
+        widgetCssUrl: PARAGConfig.getCdnUrl('sf-assistant-chat-widget.min.css', version),
+        widgetJsUrl: PARAGConfig.getCdnUrl('sf-assistant-widget.js', version)
     };
 
     // Get image URLs from MixedContentContext properties
@@ -54,7 +54,7 @@ export async function PARAGAssistant(props: WidgetContext<PARAGAssistantEntity>)
     const closingChatIconUrl = await getSingleSelectedImageUrlAsync(entity.ClosingChatIcon);
 
     // Use default avatar if none selected, similar to .NET Core implementation
-    const finalAvatarUrl = assistantAvatarUrl || PARAGAssistantConfig.getCdnUrl('chat-avatar.svg', version);
+    const finalAvatarUrl = assistantAvatarUrl || PARAGConfig.getCdnUrl('chat-avatar.svg', version);
     // Handle CSS classes
     let cssClasses = [];
     if (entity.CssClass) {
