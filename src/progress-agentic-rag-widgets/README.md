@@ -1,16 +1,12 @@
----
-
----
-
-
 # Custom Progress Agentic RAG widgets
-
-## Overview
 
 This guide demonstrates how to create and configure a set of custom widgets powered by Progress Agentic RAG.
 
 ## Available Widgets
 - AI Assistant Chat
+- AI Ask Box
+- AI Answer
+- AI Search Results
 
 ## Installing the widgets
 
@@ -23,7 +19,12 @@ To install the custom Agentic RAG widgets in your Sitefinity application, perfor
 4. In your Sitefinity CMS web application, add references to the `PARAGCore.dll` produced by the build from _Step 3_.
 5. If your Sitefinity CMS web application doesn’t already include a `Global.asax.cs` file, create it.
 6. Modify the `Global.asax.cs` file contents to match the [sample Global.asax.cs](https://github.com/Sitefinity/mvc-samples/blob/master/ProgressAgenticRAGWidgets/SitefinityWebApp/Global.asax.cs).
-7. Rebuild your Sitefinity web application.
+7. If you are using a Sitefinity version >= 15.4.8623 you should do one of the following:
+	- If you want to use the sample widgets instead of the built-in ones, disable the `Progress Agentic RAG connector` module.
+	- If you want to use a mix of the sample and the built-in widgets:
+		- remove the `PARAGOperationProvider` registration from the `Global.asax.cs` file.
+		- populate the _PARAG_ and the _AgenticRAG_ configurations with the same values.
+8. Rebuild your Sitefinity web application.
 
 ### Renderer setup
 To setup the project follow the instructions [here](./../../README.md#project-setup).
@@ -32,12 +33,12 @@ To setup the project follow the instructions [here](./../../README.md#project-se
 2. Set the following:
 
 ```
-SF_ASSISTANT_CDN_HOSTNAME=cdn.assistant.api.sitefinity.cloud
+SF_ASSISTANT_CDN_HOSTNAME=cdn.assistant.cloud.sitefinity.com
 SF_WHITELISTED_WEBSERVICES='/parag'
 ```
 
 3. Open `next.config.js`.
-4. Add the following code:
+   - For versions 15.3 and onwards add the following code:
 
 ```JavaScript
 const PARAGassistantCdnHostname = process.env.SF_ASSISTANT_CDN_HOSTNAME;
@@ -47,38 +48,37 @@ if (PARAGassistantCdnHostname) {
     cspImgSrc += ` ${PARAGassistantCdnHostname}`;
 }
 ```
+   - For older versions add `cdn.assistant.cloud.sitefinity.com` to the `script-src`, `style-src` and `img-src` sections of the `cspHeader` variable.
 
-5. Start the project.
+4. Start the project.
 
 ## Configuring the Widgets
 
-### Configure Progress Agentic RAG Settings
+### Configure Sitefinity CMS
 
-**Base URL**
-  1. Log in to the Progress Agentic RAG Dashboard.
-  1. Copy the _NucliaDB API endpoint_.
-  1. In Sitefinity CMS, navigate to: _Administration » Settings » Advanced » AgenticRAG » Base URL_.
-  1. Paste the copied endpoint without the path.
+Before you can use Progress Agentic RAG, you must configure the respective setting in Sitefinity CMS:
 
-### Configure Knowledge Box
-
-**Knowledge box ID**
-  1. Log in to the Agentic RAG Dashboard.
-  1. Open your Knowledge box or create and configure a new one.
-  1. Copy the _Knowledge Box UID_.
-  1. In Sitefinity, navigate to: _Administration » Settings » Advanced » AgenticRAG » Knowledge Boxes » KnowledgeBoxId_.
-  1. Paste the Knowledge Box UID you copied in _Step 3_.
-
-**Knowledge box API key**
-  1. In the Agentic RAG Dashboard, go to _Advanced » API Keys_.
-  1. Create a new API key and copy it.
-  1. In Sitefinity, navigate to _Administration » Settings » Advanced » AgenticRAG » Knowledge Boxes » KnowledgeBoxKey_.
-  1. Paste the API key you copied in _Step 2_.
+  1. Log in to the [Progress Agentic RAG Dashboard](https://rag.progress.cloud/).
+  1. From the _NucliaDB API endpoint_, copy **the host part** of the URL without the rest of the URL.
+     Save the value somewhere, for example &ndash; in Notepad.<br>
+     You will need this value later.
+  1. Copy the _Knowledge Box_ and save it somewhere.
+  1. In the Agentic RAG Dashboard, navigate to _Advanced » API Keys_
+  1. Create a new API key, copy it, and save it somewhere, for example &ndash; in Notepad.
+  1. In Sitefinity CMS backend, navigate to _Administration » Settings » Advanced_.
+  1. In the tree on the left, expand the _PARAG » Knowledge Boxes_ node.
+  1. Click _Create new_.
+  1. In _Base URL_, paste the endpoint you copied from _Step 2_.<br>
+     For example, <code>https://europe-1.rag.progress.cloud</code>.
+  1. In _Knowledge box UID_, paste the UID from _Step 3_.
+  1. In _Knowledge box API key_, paste the API key from _Step 5_.
+  1. Save your changes.
 
 ### Configure Assistant Settings
-In Sitefinity CMS, configure the following values under: _Administration » Settings » Advanced » AgenticRAG » Assistant_
 
-| Setting                       | Value                                  |
-| ----------------------------- | -------------------------------------- |
-| **AdminApiBaseUrl**           | `https://api.sitefinity.cloud/Version` |
-| **CdnHostName**               | `cdn.assistant.api.sitefinity.cloud`   |
+To configure the Sitefinity AI Assistant settings, perform the following:
+
+  1. In Sitefinity CMS backend, navigate to _Administration » Settings » Advanced_.
+  1. In the tree on the left, expand the _PARAG » Assistant_ node.
+  1. In _AdminApiBaseUrl_ enter `https://api.sitefinity.cloud/Version`.
+  1. In _CdnHostName_ enter `cdn.assistant.cloud.sitefinity.com`.
