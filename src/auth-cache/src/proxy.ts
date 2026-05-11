@@ -16,7 +16,7 @@ const servicePath = process.env.SF_WEBSERVICE_PATH ?
     `/${process.env.SF_WEBSERVICE_PATH.trim()}` :
     '/api/default';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     if (request.headers.has('x-cached-route-processed')) {
         return NextResponse.next();
     }

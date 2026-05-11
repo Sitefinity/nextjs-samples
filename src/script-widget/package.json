@@ -5,11 +5,11 @@
   "private": true,
   "dependencies": {
     "@progress/sitefinity-widget-designers-sdk": "0.4.0",
-    "@progress/sitefinity-nextjs-sdk": "15.4.8627",
+    "@progress/sitefinity-nextjs-sdk": "15.4.8630",
     "bootstrap": "5.3.3",
-    "next": "15.4.10",
-    "react": "19.0.3",
-    "react-dom": "19.0.3",
+    "next": "16.1.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "react-i18next": "15.4.0",
     "i18next": "24.2.1"
   },
@@ -31,5 +31,8 @@
     "build": "next build",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix"
+  },
+  "overrides": {
+    "isomorphic-dompurify": "2.26.0"
   }
 }

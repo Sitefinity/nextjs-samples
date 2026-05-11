@@ -46,7 +46,7 @@ async function performFind(
                 KnowledgeBoxName: knowledgeBoxName,
                 Query: searchQuery,
                 ConfigurationName: configurationName,
-                Show: [ 'basic', 'origin', 'values' ],
+                Show: ['basic', 'origin', 'values'],
                 Take: 200
             },
             traceContext
@@ -54,15 +54,28 @@ async function performFind(
 
         const resultItems: FindResultItem[] = [];
 
-        for (const resourceKey of Object.keys(response.Resources)) {
-            const resource = response.Resources[resourceKey];
+        if (response && response.Resources) {
+            for (const resourceKey of Object.keys(response.Resources)) {
+                const resource = response.Resources[resourceKey];
+                if (!resource) {
+                    continue;
+                }
 
-            if (resource.Origin?.Url) {
                 const allParagraphs: Paragraph[] = [];
-                for (const fieldKey of Object.keys(resource.Fields)) {
-                    const field = resource.Fields[fieldKey];
-                    for (const paraKey of Object.keys(field.Paragraphs)) {
-                        allParagraphs.push(field.Paragraphs[paraKey]);
+
+                if (resource.Fields) {
+                    for (const fieldKey of Object.keys(resource.Fields)) {
+                        const field = resource.Fields[fieldKey];
+                        if (!field || !field.Paragraphs) {
+                            continue;
+                        }
+
+                        for (const paraKey of Object.keys(field.Paragraphs)) {
+                            const paragraph = field.Paragraphs[paraKey];
+                            if (paragraph) {
+                                allParagraphs.push(paragraph);
+                            }
+                        }
                     }
                 }
 

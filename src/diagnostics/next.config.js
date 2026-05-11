@@ -9,9 +9,10 @@ const cspHeader = `
     default-src 'self'`;
 
 module.exports = {
-    webpack: (config, options) => {
-        config.resolve['alias']['@widgetregistry'] = path.resolve(__dirname, 'src/app/widget-registry');
-        return config;
+    turbopack: {
+        resolveAlias: {
+            '@widgetregistry': './src/app/widget-registry.ts'
+        }
     },
     skipTrailingSlashRedirect: true,
     output: process.env.SF_BUILD_STANDALONE === 'true' ? 'standalone' : undefined,

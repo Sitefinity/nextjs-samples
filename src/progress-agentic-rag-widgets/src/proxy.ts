@@ -16,7 +16,7 @@ if (process.env.SF_WHITELISTED_NEXTJS_PATHS) {
 
 const servicePath = RootUrlService.getWebServicePath();
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const resultFrontend = await middlewareFrontend(request);
     if (resultFrontend instanceof Response) {
         return resultFrontend;

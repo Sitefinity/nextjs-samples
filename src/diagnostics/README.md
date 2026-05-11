@@ -20,7 +20,28 @@ By default the module that is required in the nextjs-sdk is the _@progress/sitef
 npm i @opentelemetry/api @opentelemetry/exporter-trace-otlp-http @opentelemetry/resources @opentelemetry/sdk-node @opentelemetry/sdk-trace-node @opentelemetry/semantic-conventions --save-dev
 ```
 
-2. Enable tracing for Next.js in the next.config.js and change the module resolution in the webpack config:
+2. Enable tracing for Next.js in the next.config.js and change the module resolution to swap the diagnostics module:
+
+> [!NOTE]
+> Progress ships the product configured for **Turbopack** by default. Webpack configuration is still supported as an alternative.
+
+**Using Turbopack (default):**
+```js
+module.exports = {
+    // ...
+    turbopack: {
+        resolveAlias: {
+            '@progress/sitefinity-nextjs-sdk/diagnostics/empty': '@progress/sitefinity-nextjs-sdk/diagnostics/dev'
+        }
+    },
+    serverExternalPackages:[
+        "@opentelemetry/sdk-node",
+    ]
+    // ...
+}
+```
+
+**Using Webpack (alternative):**
 ```js
 module.exports = {
     // ...
@@ -51,7 +72,7 @@ Filtering the precise page requests can be achieved in Jaeger and Zipkin by the 
 
 ## SSR Widget tracing
 
-Importing the _@progress/sitefinity-nextjs-sdk/diagnostics/empty_ package would make sure that your widget will work and not report data if you disable the tracing and remove the module alias in the webpack config.
+Importing the _@progress/sitefinity-nextjs-sdk/diagnostics/empty_ package would make sure that your widget will work and not report data if you disable the tracing and remove the module alias in the Turbopack `resolveAlias` (or the webpack config, if using webpack).
 
 ```tsx
 import { RestClient } from '@progress/sitefinity-nextjs-sdk/rest-sdk';

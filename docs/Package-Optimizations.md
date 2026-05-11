@@ -1,6 +1,6 @@
 # Tree-Shaking of Package content
 
-Tree-shaking is a way to optimize the application by removing unused code from the final webpack bundle, which can significantly reduce the size of JavaScript files served and evaluated, expecially on the front end.
+Tree-shaking is a way to optimize the application by removing unused code from the final bundle, which can significantly reduce the size of JavaScript files served and evaluated, especially on the front end.
 
 ## How to Enable Tree-Shaking
 

@@ -16,7 +16,7 @@ const servicePath = process.env.SF_WEBSERVICE_PATH ?
     `/${process.env.SF_WEBSERVICE_PATH.trim()}` :
     '/api/default';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const resultFrontend = await middlewareFrontend(request);
     if (resultFrontend instanceof Response) {
         return resultFrontend;
