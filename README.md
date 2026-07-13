@@ -107,7 +107,7 @@ The starter template repository contains a set of files that are built specifica
 
 * package.json -> Standard package.json file with dependencies for [**@progress/sitefinity-widget-designers-sdk**](https://www.npmjs.com/package/@progress/sitefinity-widget-designers-sdk) and [**@progress/sitefinity-nextjs-sdk**](https://www.npmjs.com/package/@progress/sitefinity-nextjs-sdk)
 
-* src/middleware.ts -> Standard next.js middleware file. The default implementation contains the [proxy logic](./docs/CI-CD.md#proxy-logic). The file can be further modified according to the needs of the application.
+* src/proxy.ts -> Standard next.js proxy file. The default implementation contains the [proxy logic](./docs/CI-CD.md#proxy-logic). The file can be further modified according to the needs of the application.
 
 * src/index.css -> Default styles for the widgets based on bootstrap.
 
@@ -209,25 +209,6 @@ export async function ContentBlock(props: WidgetContext<ContentBlockEntity>) {
     ...
 
 ```
-
-## Legacy MVC & Webforms pages handling
-
-In order for the NextJs renderer to handle legacy MVC and WebForms pages, their urls have to be explicitly specified in one of 2 places:
-
-- In `middleware.ts` file there is a variable called `whitelistedPaths` which is an array of strings. The urls of the pages can be placed as separate strings:
-```tsx
-const whitelistedPaths: string[] = ['/legacypageurlone', '/legacypageurltwo'];
-```
-- In `env.development` file by modifying the environmental variable like so: `SF_WHITELISTED_PATHS="/legacypageurlone,/legacypageurltwo"`.  More information about this configuration file can be found [here](./docs/CI-CD.md#environment-variables-legend).
-
-### Legacy MVC & Webforms home page navigation
-
-If the home page of the site is legacy (MVC/Web forms) navigation to it can be proxied and not rendered in one of 2 ways:
-
- - Navigating directly to the url: _'www.siteurl/homepage'_. This will require the home page to be listed in the `whitelistedPaths` like mentioned above
- - Navigating directly to the url: _'www.siteurl/'_. This will require setting `SF_IS_HOME_PAGE_LEGACY="true"` in the `env.development` file.
-
-
 
 ## CSP Headers
 

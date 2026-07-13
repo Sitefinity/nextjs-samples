@@ -1,6 +1,6 @@
 # Auth cache
 
-This example demonstrates how to configure caching based on authentication. Refer to the **middlewareCache** function in the [middleware.ts](./src/middleware.ts) for further details.
+This example demonstrates how to configure caching based on authentication. Refer to the **proxyCache** function in the [proxy.ts](./src/proxy.ts) for further details.
 
 We check whether the request is made by an authenticated or anonymous user based on the request's cookies.
 ``` typescript
@@ -22,16 +22,16 @@ if (!hasAuthCookie && !request.nextUrl.pathname.startsWith('/render-lazy')) {
   });
 }
 ```
-Then, include this **middlewareCache** function into the app's [middleware](./src/middleware.ts) file.
+Then, include this **proxyCache** function into the app's [proxy](./src/proxy.ts) file.
 First, we check to ignore all requests that have already been processed by verifying the presence of the **x-cached-route-processed** header.
 ``` typescript
 if (request.headers.has('x-cached-route-processed')) {
   return NextResponse.next();
 }
 ```
-Then, add the new step from **middlewareCache**.
+Then, add the new step from **proxyCache**.
 ``` typescript
-const resultCache = await middlewareCache(request);
+const resultCache = await proxyCache(request);
 if (resultCache instanceof Response) {
   return resultCache;
 }

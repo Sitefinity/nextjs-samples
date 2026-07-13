@@ -7,15 +7,6 @@ const isDebugEnabled = process.env.NODE_ENV !== 'production';
 const headerBypassHostValidationKey = 'X-SF-BYPASS-HOST-VALIDATION-KEY';
 const headerBypassHostKey = 'X-SF-BYPASS-HOST';
 
-const whitelistedServices: string[] = [];
-if (process.env.SF_WHITELISTED_WEBSERVICES) {
-    whitelistedServices.push(
-        ...process.env.SF_WHITELISTED_WEBSERVICES.split(',').map((x) =>
-            x.trim()[0] === '/' ? x.trim() : `/${x.trim()}`
-        )
-    );
-}
-
 const whitelistedNextJsPagePaths: string[] = [];
 if (process.env.SF_WHITELISTED_NEXTJS_PATHS) {
     whitelistedNextJsPagePaths.push(
@@ -25,23 +16,11 @@ if (process.env.SF_WHITELISTED_NEXTJS_PATHS) {
     );
 }
 
-// user defined paths that can be additionally proxied
-// can be used for legacy MVC/WebForms pages or paths that are entirely custom
-const whitelistedPaths: string[] = [];
-if (process.env.SF_WHITELISTED_PATHS) {
-    const whiteListedPathsFromEnvironment = (process.env.SF_WHITELISTED_PATHS as string)
-        .split(',')
-        .map((x) => (x.trim()[0] === '/' ? x.trim() : `/${x.trim()}`));
-    whitelistedPaths.push(...whiteListedPathsFromEnvironment);
-}
-
-const servicePath = RootUrlService.getWebServicePath();
-
 // Paths that should NOT be proxied even if they match other conditions
 const blacklistedProxyPaths = ['/sitefinity/template', '/sitefinity/forms'];
 
-const frontendCmsPaths = [
-    `/${servicePath}`,
+const allProxyPaths = [
+    `/${RootUrlService.getWebServicePath()}`,
     '/forms/submit',
     '/sitefinity/anticsrf',
     '/sitefinity/login-handler',
@@ -49,10 +28,7 @@ const frontendCmsPaths = [
     '/ResourcePackages',
     '/web-interface/calendars',
     '/web-interface/events',
-    '/kendo'
-];
-
-const adminCmsPaths = [
+    '/kendo',
     '/sf/',
     '/sitefinity',
     '/Sitefinity/Services',
@@ -71,7 +47,6 @@ const adminCmsPaths = [
     '/documents/',
     '/docs/',
     '/videos/',
-    '/forms/submit',
     '/ExtRes/',
     '/TranslationRes/',
     '/RBinRes/',
@@ -84,8 +59,6 @@ const adminCmsPaths = [
     '/Frontend-Assembly/',
     '/Telerik.Sitefinity.Frontend/'
 ];
-
-const allProxyPaths = [...frontendCmsPaths, ...adminCmsPaths, ...whitelistedServices, ...whitelistedPaths];
 
 export async function proxy(request: NextRequest) {
     // Short-circuit requests that Next.js handles natively (build output,
@@ -138,14 +111,7 @@ export async function proxy(request: NextRequest) {
         return proxyResult;
     }
 
-    if (process.env.SF_PROXY_BY_DEFAULT === 'true') {
-        logWithColor('middleware Proxy by default enabled - proxying request', 'cyan');
-        const bypassHost = shouldBypassHost(request);
-        return fetchProxiedResponse(request, bypassHost);
-    }
-
-    // When proxy by default is not enabled, only known paths are proxied, other requests are handled by Next.js (return NextResponse.next()).
-    return NextResponse.next();
+    return fetchProxiedResponse(request);
 }
 
 async function proxyMiddleware(request: NextRequest) {
@@ -169,7 +135,6 @@ async function proxyMiddleware(request: NextRequest) {
     const isSitefinity = pathname.toLowerCase() === '/sitefinity';
     const isSitefinityRoute = /\/sitefinity\/(?!(template|forms))/i.test(pathname);
     const isAppStatus = isAppStatusRequest(request);
-    const isLegacyHome = proxyHomePage(request);
 
     logWithColor('proxyMiddleware Proxy condition checks', 'magenta', {
         hasAxd,
@@ -177,8 +142,7 @@ async function proxyMiddleware(request: NextRequest) {
         matchesProxyPath,
         isSitefinity,
         isSitefinityRoute,
-        isAppStatus,
-        isLegacyHome
+        isAppStatus
     });
 
     if (
@@ -188,8 +152,7 @@ async function proxyMiddleware(request: NextRequest) {
         matchesProxyPath ||
         isSitefinity ||
         isSitefinityRoute ||
-        isAppStatus ||
-        isLegacyHome
+        isAppStatus
     ) {
         logWithColor('proxyMiddleware Condition matched - proxying request', 'magenta');
         return proxyRequest(request, bypassHost);
@@ -229,7 +192,8 @@ async function proxyRequest(request: NextRequest, bypassHost: string, sendRender
 // URL alone whether Next.js should render the page or the CMS should serve it
 // (e.g. legacy MVC/WebForms pages), so we ask the CMS and let it decide via
 // the X-SFRENDERER-PROXY response header.
-async function fetchProxiedResponse(request: NextRequest, bypassHost: string) {
+async function fetchProxiedResponse(request: NextRequest) {
+    const bypassHost = shouldBypassHost(request);
     const { url, headers } = generateProxyRequest(request, bypassHost, true);
 
     logWithColor('fetchProxiedResponse Starting proxy request', 'green', {
@@ -505,21 +469,6 @@ function isAppStatusRequest(request: NextRequest) {
     }
 
     return isAppStatus;
-}
-
-function proxyHomePage(request: NextRequest) {
-    // if home page is made with a renderer, it will be handled by the home page logic here in nextjs
-    // if it is legacy page (MVC, Web form), proxy the request to Sitefinity
-    const isLegacyHomePage: string = process.env.SF_IS_HOME_PAGE_LEGACY || 'false';
-    const isLegacy = request.nextUrl.pathname === '/' && isLegacyHomePage.toLocaleLowerCase() === 'true';
-
-    if (isLegacy) {
-        logWithColor('proxyHomePage Home page is configured as legacy - will proxy to CMS', 'white');
-    } else if (request.nextUrl.pathname === '/') {
-        logWithColor('proxyHomePage Home page is not legacy - will use Next.js renderer', 'white');
-    }
-
-    return isLegacy;
 }
 
 function generateRandomString() {

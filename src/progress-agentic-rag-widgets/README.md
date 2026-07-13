@@ -34,7 +34,6 @@ To setup the project follow the instructions [here](./../../README.md#project-se
 
 ```
 SF_ASSISTANT_CDN_HOSTNAME=cdn.assistant.cloud.sitefinity.com
-SF_WHITELISTED_WEBSERVICES='/parag'
 ```
 
 3. Open `next.config.js`.
