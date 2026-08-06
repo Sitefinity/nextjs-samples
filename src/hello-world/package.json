@@ -5,9 +5,11 @@
   "private": true,
   "dependencies": {
     "@progress/sitefinity-widget-designers-sdk": "0.4.4",
-    "@progress/sitefinity-nextjs-sdk": "15.4.8632",
+    "@progress/sitefinity-nextjs-sdk": "15.4.8633",
     "bootstrap": "5.3.3",
-    "next": "16.2.6",
+    "isomorphic-dompurify": "2.26.0",
+    "marked": "17.0.1",
+    "next": "16.2.11",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-i18next": "15.4.0",
@@ -57,6 +59,7 @@
       "function.prototype.name": "1.1.8"
     },
     "postcss": {
+      ".": "8.5.18",
       "nanoid": "3.3.12"
     },
     "resolve": {
@@ -74,11 +77,10 @@
     "@unrs/resolver-binding-wasm32-wasi": {
       "@napi-rs/wasm-runtime": "1.1.5"
     },
-    "@progress/sitefinity-nextjs-sdk": {
-      "isomorphic-dompurify": {
-        "dompurify": "3.4.9"
-      }
+    "jsdom": {
+      "ws": "8.21.1"
     },
+    "sharp": "0.35.3",
     "eslint-plugin-import": {
       "eslint-module-utils": "2.13.0"
     }
