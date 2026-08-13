@@ -32,6 +32,7 @@ export interface PARAGAnswerStaticConfig {
         endpoint: string;
         showSources: boolean;
         showFeedbackButtons: boolean | null;
+        additionalHeaders: { [key: string]: string };
     };
 }
 
@@ -70,7 +71,8 @@ export function PARAGAnswerDefaultView(props: PARAGAnswerViewProps) {
             serviceType: 'ProgressARAGChatService',
             endpoint: '/parag/',
             showSources: props.showSources,
-            showFeedbackButtons: props.showFeedback
+            showFeedbackButtons: props.showFeedback,
+            additionalHeaders: { 'X-Requested-With': 'react' }
         }
     };
 

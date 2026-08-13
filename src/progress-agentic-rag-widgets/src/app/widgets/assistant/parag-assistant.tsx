@@ -103,7 +103,8 @@ export async function PARAGAssistant(props: WidgetContext<PARAGAssistantEntity>)
                 knowledgeBoxName: entity.KnowledgeBoxName,
                 configurationName: entity.ConfigurationName,
                 showFeedbackButtons: entity.ShowFeedback,
-                showSources: entity.ShowSources
+                showSources: entity.ShowSources,
+                additionalHeaders: { 'X-Requested-With': 'react' }
             }
         };
 
