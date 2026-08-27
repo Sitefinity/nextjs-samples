@@ -4,16 +4,16 @@
   "license": "EULA.md",
   "private": true,
   "dependencies": {
-    "@progress/sitefinity-nextjs-sdk": "15.4.8636",
+    "@progress/sitefinity-nextjs-sdk": "15.4.8637",
     "@progress/sitefinity-widget-designers-sdk": "0.4.6",
     "bootstrap": "5.3.3",
+    "i18next": "24.2.1",
     "isomorphic-dompurify": "2.26.0",
     "marked": "17.0.1",
-    "next": "16.2.11",
+    "next": "16.3.1",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "react-i18next": "15.4.0",
-    "i18next": "24.2.1"
+    "react-i18next": "15.4.0"
   },
   "devDependencies": {
     "@types/bootstrap": "5.2.10",
@@ -35,6 +35,9 @@
     "lint:fix": "eslint . --fix"
   },
   "overrides": {
+    "@progress/sitefinity-nextjs-sdk": {
+      "next": "16.3.1"
+    },
     "tinyglobby": {
       "picomatch": "4.0.4"
     },
@@ -48,7 +51,14 @@
       "acorn": "8.16.0"
     },
     "ts-node": {
-      "acorn": "8.16.0"
+      "acorn": "8.16.0",
+      "@tsconfig/node10": "1.0.7",
+      "@tsconfig/node12": "1.0.7",
+      "@tsconfig/node14": "1.0.0",
+      "@tsconfig/node16": "1.0.2"
+    },
+    "eslint-import-resolver-typescript": {
+      "get-tsconfig": "4.10.0"
     },
     "next": {
       "baseline-browser-mapping": "2.10.35",
@@ -59,9 +69,10 @@
       "function.prototype.name": "1.1.8"
     },
     "postcss": {
-      ".": "8.5.18",
-      "nanoid": "3.3.12"
+      ".": "8.5.23",
+      "nanoid": "3.3.17"
     },
+    "dompurify": "3.4.13",
     "resolve": {
       "node-exports-info": "1.6.0"
     },

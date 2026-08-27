@@ -20,7 +20,10 @@ const customWidgetRegistry: WidgetRegistry = {
                 Section: 'Marketing',
                 EmptyIconText: 'Select an AI assistant',
                 EmptyIcon: 'pencil',
-                IconName: 'chat'
+                IconName: 'chat',
+                WidgetBehavior: {
+                    NotPersonalizable: true
+                }
             }
         },
         'PARAGAskBox': {
@@ -46,7 +49,10 @@ const customWidgetRegistry: WidgetRegistry = {
                 Category: 'Content',
                 Section: 'AI search',
                 HasQuickEditOperation: true,
-                IconName: 'ai-search-sparkle'
+                IconName: 'ai-search-sparkle',
+                WidgetBehavior: {
+                    NotPersonalizable: true
+                }
             }
         },
         'PARAGResults': {
@@ -58,7 +64,10 @@ const customWidgetRegistry: WidgetRegistry = {
                 Category: 'Content',
                 Section: 'AI search',
                 HasQuickEditOperation: true,
-                IconName: 'ai-search-sparkle'
+                IconName: 'ai-search-sparkle',
+                WidgetBehavior: {
+                    NotPersonalizable: true
+                }
             }
         }
     }
