@@ -36,7 +36,8 @@ const customWidgetRegistry: WidgetRegistry = {
                 Title: 'Child',
                 Category: 'Content',
                 Section: 'Basic',
-                HideEmptyVisual: true
+                HideEmptyVisual: true,
+                IsEmptyEntity: true
             },
             ssr: true // whether this is a server rendered or client rendered component
         }
