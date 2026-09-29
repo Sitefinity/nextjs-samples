@@ -4,7 +4,7 @@
   "license": "EULA.md",
   "private": true,
   "dependencies": {
-    "@progress/sitefinity-nextjs-sdk": "15.4.8638",
+    "@progress/sitefinity-nextjs-sdk": "15.4.8639",
     "@progress/sitefinity-widget-designers-sdk": "0.4.6",
     "bootstrap": "5.3.3",
     "i18next": "24.2.1",
