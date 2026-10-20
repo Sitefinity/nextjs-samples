@@ -4,13 +4,13 @@
   "license": "EULA.md",
   "private": true,
   "dependencies": {
-    "@progress/sitefinity-nextjs-sdk": "15.4.8639",
+    "@progress/sitefinity-nextjs-sdk": "15.4.8640",
     "@progress/sitefinity-widget-designers-sdk": "0.4.6",
     "bootstrap": "5.3.3",
     "i18next": "24.2.1",
     "isomorphic-dompurify": "2.26.0",
     "marked": "17.0.1",
-    "next": "16.3.3",
+    "next": "16.3.6",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-i18next": "15.4.0"
@@ -23,7 +23,7 @@
     "@typescript-eslint/eslint-plugin": "8.19.1",
     "@typescript-eslint/parser": "8.19.1",
     "eslint": "9.18.0",
-    "eslint-config-next": "16.3.3",
+    "eslint-config-next": "16.3.6",
     "ts-node": "10.9.2",
     "typescript": "5.7.3"
   },
@@ -36,7 +36,7 @@
   },
   "overrides": {
     "@progress/sitefinity-nextjs-sdk": {
-      "next": "16.3.3"
+      "next": "16.3.6"
     },
     "tinyglobby": {
       "picomatch": "4.0.4"
